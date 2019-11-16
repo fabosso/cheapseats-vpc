@@ -41,7 +41,8 @@
             "Effect": "Allow",
             "Action": [
                 "route53:ChangeResourceRecordSets",
-                "route53:ListResourceRecordSets"
+                "route53:ListResourceRecordSets",
+                "route53:GetHostedZone"
             ],
             "Resource": "arn:aws:route53:::hostedzone/Z36IIEZY5CC9AF"
         },
