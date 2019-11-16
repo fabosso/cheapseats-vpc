@@ -1,0 +1,107 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "XonoticCFFetchParameters",
+            "Effect": "Allow",
+            "Action": [
+                "ssm:GetParameters",
+                "ssm:GetParameter"
+            ],
+            "Resource": [
+                "arn:aws:ssm:*:495602461790:parameter/Deimos/*",
+                "arn:aws:ssm:*:495602461790:parameter/Installers/*",
+                "arn:aws:ssm:*:495602461790:parameter/Xonotic/*"
+            ]
+        },
+        {
+            "Sid": "XonoticCFCloudFront",
+            "Effect": "Allow",
+            "Action": [
+                "cloudfront:GetCloudFrontOriginAccessIdentityConfig",
+                "cloudfront:ListCloudFrontOriginAccessIdentities",
+                "cloudfront:TagResource",
+                "cloudfront:DeleteCloudFrontOriginAccessIdentity",
+                "cloudfront:CreateDistributionWithTags",
+                "cloudfront:CreateDistribution",
+                "cloudfront:CreateCloudFrontOriginAccessIdentity",
+                "cloudfront:GetDistribution",
+                "cloudfront:ListDistributions",
+                "cloudfront:GetCloudFrontOriginAccessIdentity",
+                "cloudfront:UpdateDistribution",
+                "cloudfront:UpdateCloudFrontOriginAccessIdentity",
+                "cloudfront:DeleteDistribution",
+                "cloudfront:GetDistributionConfig",
+                "cloudfront:UntagResource"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "XonoticCFRoute53A",
+            "Effect": "Allow",
+            "Action": [
+                "route53:ChangeResourceRecordSets",
+                "route53:ListResourceRecordSets"
+            ],
+            "Resource": "arn:aws:route53:::hostedzone/Z36IIEZY5CC9AF"
+        },
+        {
+            "Sid": "XonoticCFRoute53B",
+            "Effect": "Allow",
+            "Action": "route53:ListHostedZones",
+            "Resource": "*"
+        },
+        {
+            "Sid": "XonoticCFConfigBucketA",
+            "Effect": "Allow",
+            "Action": "s3:ListBucket",
+            "Resource": [
+                "arn:aws:s3:::codepipeline-ap-southeast-2-810622726934",
+                "arn:aws:s3:::deimos-configmgmt"
+            ]
+        },
+        {
+            "Sid": "XonoticCFBucketAccess",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject",
+                "s3:GetObjectVersion"
+            ],
+            "Resource": [
+                "arn:aws:s3:::codepipeline-ap-southeast-2-810622726934/*",
+                "arn:aws:s3:::deimos-configmgmt/Xonotic/*",
+                "arn:aws:s3:::deimos-configmgmt/External-Sources/JQuery/*",
+                "arn:aws:s3:::deimos-configmgmt/Stacks/*"
+            ]
+        },
+        {
+            "Sid": "XonoticCFCreateBucket",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetBucketPolicyStatus",
+                "s3:PutAnalyticsConfiguration",
+                "s3:PutAccelerateConfiguration",
+                "s3:PutMetricsConfiguration",
+                "s3:PutReplicationConfiguration",
+                "s3:CreateBucket",
+                "s3:PutBucketCORS",
+                "s3:DeleteBucketPolicy",
+                "s3:GetBucketPolicy",
+                "s3:PutInventoryConfiguration",
+                "s3:PutEncryptionConfiguration",
+                "s3:GetBucketObjectLockConfiguration",
+                "s3:PutBucketNotification",
+                "s3:DeleteBucketWebsite",
+                "s3:PutBucketWebsite",
+                "s3:PutBucketTagging",
+                "s3:PutBucketLogging",
+                "s3:PutLifecycleConfiguration",
+                "s3:PutBucketPolicy",
+                "s3:PutBucketObjectLockConfiguration",
+                "s3:DeleteBucket",
+                "s3:PutBucketVersioning"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
