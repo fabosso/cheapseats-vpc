@@ -53,6 +53,12 @@
             "Resource": "*"
         },
         {
+            "Sid": "XonoticCFRoute53C",
+            "Effect": "Allow",
+            "Action": "route53:GetChange",
+            "Resource": "arn:aws:route53:::change/*"
+        },
+        {
             "Sid": "XonoticCFConfigBucketA",
             "Effect": "Allow",
             "Action": "s3:ListBucket",
