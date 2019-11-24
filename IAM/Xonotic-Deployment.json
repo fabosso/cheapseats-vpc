@@ -15,6 +15,18 @@
             ]
         },
         {
+            "Sid": "XonoticCFSetParameters",
+            "Effect": "Allow",
+            "Action": [
+                "ssm:PutParameter",
+                "ssm:AddTagsToResource",
+                "ssm:RemoveTagsFromResource"
+            ],
+            "Resource": [
+                "arn:aws:ssm:*:495602461790:parameter/Xonotic/*"
+            ]
+        },
+        {
             "Sid": "XonoticCFCloudFront",
             "Effect": "Allow",
             "Action": [
