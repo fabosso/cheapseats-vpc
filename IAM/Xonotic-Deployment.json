@@ -121,6 +121,31 @@
                 "s3:PutBucketVersioning"
             ],
             "Resource": "*"
+        },
+        {
+            "Sid": "XonoticDynamoDBCreate",
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:CreateTable",
+                "dynamodb:TagResource",
+                "dynamodb:UntagResource",
+                "dynamodb:DescribeTable",
+                "dynamodb:DeleteTable",
+                "dynamodb:UpdateTable"
+            ],
+            "Resource": "arn:aws:dynamodb:*:495602461790:table/xonotic-server*"
+        },
+        {
+            "Sid": "XonoticDynamoDBList",
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:ListGlobalTables",
+                "dynamodb:ListTables",
+                "dynamodb:DescribeReservedCapacity",
+                "dynamodb:DescribeLimits"
+            ],
+            "Resource": "*"
         }
+ 
     ]
 }
