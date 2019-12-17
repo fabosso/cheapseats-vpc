@@ -23,10 +23,13 @@ def vpc_has_natgw(ec2):
     ]
     
     gateways = ec2.describe_nat_gateways(Filters=filters)
-    print('%s\n' % gateways)
-    
-    # Returns true if a VPC has a NAT gateway currently running
-    return False #FIXME
+    return (len(gateways['NatGateways']) > 0)
+  
+def create_nat_gateway():
+    # Determine Subnet + Allocation IDs
+    # Create NAT Gateway
+    # Add Tags to NAT Gateway
+    pass
 
 def lambda_handler(event, context):
     ec2 = boto3.client('ec2')
