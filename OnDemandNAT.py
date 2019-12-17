@@ -29,6 +29,7 @@ def create_nat_gateway():
     # Determine Subnet + Allocation IDs
     # Create NAT Gateway
     # Add Tags to NAT Gateway
+    # Update relevant route-tables.
     pass
 
 def lambda_handler(event, context):
