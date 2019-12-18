@@ -22,8 +22,14 @@ def vpc_has_natgw(ec2):
         {'Name': 'state', 'Values' : ['pending', 'available']}
     ]
     
-    gateways = ec2.describe_nat_gateways(Filters=filters)
-    return (len(gateways['NatGateways']) > 0)
+    gateway_json = ec2.describe_nat_gateways(Filters=filters)
+    gateways = jmespath.search('NatGateways[*].NatGatewayId', gateway_json)
+    
+    if len(gateways) > 0:
+        return gateways
+    else:
+        return None
+
   
 def create_nat_gateway():
     # Determine Subnet + Allocation IDs
