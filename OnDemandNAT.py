@@ -4,6 +4,8 @@ import boto3
 import jmespath
 import random
 
+ec2 = boto3.client('ec2')
+
 def ec2_need_natgw(ec2):
     # Returns a True if any currently running instances have
     # The 'NAT-Required' tag set.
@@ -46,21 +48,27 @@ def create_nat_gateway(ec2):
     print('%s\n----ID: %s\n' % (new_gw_json, gatewayId))
     
     ec2.create_tags(Resources=[gatewayId], Tags=[{'Key' : 'OnDemandNAT', 'Value' : 'True'}, {'Key' : 'Name', 'Value' : 'OnDemandNAT-Gateway'}])
+    return gatewayId
     
-    # Determine Subnet + Allocation IDs
-    # Create NAT Gateway
-    # Add Tags to NAT Gateway
-    # Update relevant route-tables.
-    pass
+def update_route_tables(gatewayId):
+    routes_json = ec2.describe_route_tables(Filters=[{'Name' : 'tag:OnDemandNAT', 'Values' : ['Yes', 'True']}])
+    routes_list = jmespath.search('RouteTables[*].RouteTableId', routes_json)
+    
+    for routeTableId in routes_list:
+        ec2.delete_route(RouteTableId = routeTableId, DestinationCidrBlock = '0.0.0.0/0')
+        ec2.create_route(RouteTableId = routeTableId, DestinationCidrBlock = '0.0.0.0/0', NatGatewayId = gatewayId)
     
 def lambda_handler(event, context):
-    ec2 = boto3.client('ec2')
     
     nat_needed = ec2_need_natgw(ec2)
     nat_available = vpc_has_natgw(ec2)
     
     if nat_available == None:   # and nat_needed = true (removed for testing)
-        create_nat_gateway(ec2)
+        gatewayId = create_nat_gateway(ec2)
+    else:
+        gatewayId = nat_available[0]
+        
+    update_route_tables(gatewayId)
     
     return {
         'nat-needed' : nat_needed
