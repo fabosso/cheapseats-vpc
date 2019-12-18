@@ -39,7 +39,13 @@ def create_nat_gateway(ec2):
     subnet_json = ec2.describe_subnets(Filters=[{'Name' : 'tag:Public', 'Values' : ['Yes']}])
     subnet_list = jmespath.search('Subnets[*].SubnetId', subnet_json)
     subnetId = random.choice(subnet_list)
-    print ('%s\n' % subnetId)
+    
+    new_gw_json = ec2.create_nat_gateway(AllocationId=allocId, SubnetId=subnetId)
+    gatewayId = jmespath.search('NatGateway.NatGatewayId' , new_gw_json)
+    
+    print('%s\n----ID: %s\n' % (new_gw_json, gatewayId))
+    
+    ec2.create_tags(Resources=[gatewayId], Tags=[{'Key' : 'OnDemandNAT', 'Value' : 'True'}, {'Key' : 'Name', 'Value' : 'OnDemandNAT-Gateway'}])
     
     # Determine Subnet + Allocation IDs
     # Create NAT Gateway
