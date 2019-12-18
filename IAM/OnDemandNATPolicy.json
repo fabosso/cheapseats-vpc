@@ -1,0 +1,26 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "OnDemandNATEC2",
+            "Effect": "Allow",
+            "Action": [
+                "ec2:ReplaceRouteTableAssociation",
+                "ec2:DescribeInstances",
+                "ec2:DescribeTags",
+                "ec2:CreateNatGateway",
+                "ec2:DeleteRoute",
+                "ec2:CreateRouteTable",
+                "ec2:DescribeNatGateways",
+                "ec2:DescribeVpcAttribute",
+                "ec2:ReplaceRoute",
+                "ec2:DeleteRouteTable",
+                "ec2:CreateRoute",
+                "ec2:DeleteNatGateway",
+                "ec2:DescribeSubnets",
+                "ec2:DescribeRouteTables"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
