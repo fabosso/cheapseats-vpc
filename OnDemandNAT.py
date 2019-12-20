@@ -3,6 +3,9 @@ import os
 import boto3
 import jmespath
 import random
+from datetime import datetime, timedelta
+
+from botocore.exceptions import ClientError
 
 ec2 = boto3.client('ec2')
 
@@ -27,7 +30,7 @@ def vpc_has_natgw():
     ]
     
     gateway_json = ec2.describe_nat_gateways(Filters=filters)
-    gateways = jmespath.search('NatGateways[*].NatGatewayId', gateway_json)
+    gateways = jmespath.search('NatGateways[*].[NatGatewayId, State, CreateTime]', gateway_json)
     
     if len(gateways) > 0:
         return gateways
@@ -54,25 +57,35 @@ def update_route_tables(gatewayId):
     routes_json = ec2.describe_route_tables(Filters=[{'Name' : 'tag:OnDemandNAT', 'Values' : ['Yes', 'True']}])
     routes_list = jmespath.search('RouteTables[*].RouteTableId', routes_json)
     
-    for routeTableId in routes_list:
-        ec2.delete_route(RouteTableId = routeTableId, DestinationCidrBlock = '0.0.0.0/0')
-        ec2.create_route(RouteTableId = routeTableId, DestinationCidrBlock = '0.0.0.0/0', NatGatewayId = gatewayId)
-    print ("%s\n---\nRouteTableIDs: %s\n" % (routes_json, routes_list))
+    # Wait for gateway to finish starting.
+    waiter = ec2.get_waiter('nat_gateway_available')
+    waiter.wait(NatGatewayIds = [gatewayId])
     
-def lambda_handler(event, context):
+    for routeTableId in routes_list:
+        try:
+            ec2.delete_route(RouteTableId = routeTableId, DestinationCidrBlock = '0.0.0.0/0')
+        except ClientError as e :
+            if e.error.get('Code', None) != 'FIXME':
+                raise e
+            else:
+                print('%s\n' % e)
+        ec2.create_route(RouteTableId = routeTableId, DestinationCidrBlock = '0.0.0.0/0', NatGatewayId = gatewayId)
+    
+def ec2_change_handler(event, context):
     
     nat_needed = ec2_need_natgw()
-    nat_available = vpc_has_natgw()
+    gateway_list = vpc_has_natgw()
     
-    if nat_available == None:   # and nat_needed = true (removed for testing)
+    if gateway_list == None: #and nat_needed == True:
         gatewayId = create_nat_gateway()
         update_route_tables(gatewayId)
-    else:
-        gatewayId = nat_available[0]
-        
-    update_route_tables(gatewayId)
+    elif gateway_list != None and nat_needed == False:
+        for (gatewayId, state, created) in  gateway_list:
+            age = datetime.now(created.tzinfo) - created
+            if age >= timedelta(minutes=15):
+                print("Clearing %s [%s] - Created %s\n" % (gatewayId, state, age))
+                ec2.delete_nat_gateway(NatGatewayId = gatewayId)
     
     return {
         'nat-needed' : nat_needed
-    ,   'gateways'  : nat_available
     }
