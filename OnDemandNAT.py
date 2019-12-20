@@ -47,9 +47,7 @@ def create_nat_gateway():
     
     new_gw_json = ec2.create_nat_gateway(AllocationId=allocId, SubnetId=subnetId)
     gatewayId = jmespath.search('NatGateway.NatGatewayId' , new_gw_json)
-    
-    print('%s\n----ID: %s\n' % (new_gw_json, gatewayId))
-    
+        
     ec2.create_tags(Resources=[gatewayId], Tags=[{'Key' : 'OnDemandNAT', 'Value' : 'True'}, {'Key' : 'Name', 'Value' : 'OnDemandNAT-Gateway'}])
     return gatewayId
     
@@ -70,21 +68,47 @@ def update_route_tables(gatewayId):
                 raise e
         ec2.create_route(RouteTableId = routeTableId, DestinationCidrBlock = '0.0.0.0/0', NatGatewayId = gatewayId)
     
-def ec2_change_handler(event, context):
+def autolaunch_handler(event, context):
     
     nat_needed = ec2_need_natgw()
     gateway_list = vpc_has_natgw()
     
+    info = {
+        'nat_needed' : nat_needed
+    }
+    
+    if gateway_list == None and nat_needed == True:
+        gatewayId = create_nat_gateway()
+        update_route_tables(gatewayId)
+        
+        info['nat-launched'] = gatewayId
+    elif gateway_list != None and nat_needed == False:
+        gw_change_list = []
+        
+        for (gatewayId, state, created) in  gateway_list:
+            age = datetime.now(created.tzinfo) - created
+            if age >= timedelta(minutes=45):
+                ec2.delete_nat_gateway(NatGatewayId = gatewayId)
+                gw_change_list.append({'action' : 'deleted', 'gatewayId' : gatewayId, 'age' : ('%s' % age)})
+            else:
+                gw_change_list.append({'action' : 'skipped', 'gatewayId' : gatewayId, 'age' : ('%s' % age)})
+        info['nat-changed'] = gw_change_list
+    
+    return info
+
+    
+def request_gateway_handler(event, context):
+    gateway_list = vpc_has_natgw()
+    
+    info = {
+        'nat_needed' : 'requested'
+    }
+    
     if gateway_list == None: #and nat_needed == True:
         gatewayId = create_nat_gateway()
         update_route_tables(gatewayId)
-    elif gateway_list != None and nat_needed == False:
-        for (gatewayId, state, created) in  gateway_list:
-            age = datetime.now(created.tzinfo) - created
-            if age >= timedelta(minutes=15):
-                print("Clearing %s [%s] - Created %s\n" % (gatewayId, state, age))
-                ec2.delete_nat_gateway(NatGatewayId = gatewayId)
-    
-    return {
-        'nat-needed' : nat_needed
-    }
+        info['nat-launched'] = gatewayId
+    else: 
+        info['nat-existing'] = True
+        
+    return info
