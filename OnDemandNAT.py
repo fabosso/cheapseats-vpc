@@ -4,6 +4,7 @@ import boto3
 import jmespath
 import random
 from datetime import datetime, timedelta
+from dateutil import parser
 
 from botocore.exceptions import ClientError
 
@@ -30,7 +31,7 @@ def vpc_has_natgw():
     ]
     
     gateway_json = ec2.describe_nat_gateways(Filters=filters)
-    gateways = jmespath.search('NatGateways[*].[NatGatewayId, State, CreateTime]', gateway_json)
+    gateways = jmespath.search('NatGateways[*].[NatGatewayId, State, CreateTime, Tags[?Key==\'LastRequested\'].Value | [0]]', gateway_json)
     
     if len(gateways) > 0:
         return gateways
@@ -47,8 +48,17 @@ def create_nat_gateway():
     
     new_gw_json = ec2.create_nat_gateway(AllocationId=allocId, SubnetId=subnetId)
     gatewayId = jmespath.search('NatGateway.NatGatewayId' , new_gw_json)
-        
-    ec2.create_tags(Resources=[gatewayId], Tags=[{'Key' : 'OnDemandNAT', 'Value' : 'True'}, {'Key' : 'Name', 'Value' : 'OnDemandNAT-Gateway'}])
+    
+    print('%s\n----ID: %s\n' % (new_gw_json, gatewayId))
+    
+    ec2.create_tags(
+      Resources=[gatewayId]
+    , Tags=[
+        {'Key' : 'OnDemandNAT', 'Value' : 'True'}
+      , {'Key' : 'Name', 'Value' : 'OnDemandNAT-Gateway'}
+      , {'Key' : 'LastRequested', 'Value' : '%s' % datetime.utcnow()}
+      ]
+    )
     return gatewayId
     
 def update_route_tables(gatewayId):
@@ -82,16 +92,28 @@ def autolaunch_handler(event, context):
         update_route_tables(gatewayId)
         
         info['nat-launched'] = gatewayId
+    elif gateway_list != None and nat_needed == True:
+        for (gatewayId, state, created, lastRequested) in gateway_list:
+            ec2.create_tags(
+              Resources=[gatewayId]
+            , Tags=[ {'Key' : 'LastRequested', 'Value' : '%s' % datetime.utcnow() } ]
+           )
     elif gateway_list != None and nat_needed == False:
         gw_change_list = []
         
-        for (gatewayId, state, created) in  gateway_list:
+        for (gatewayId, state, created, lastRequested) in  gateway_list:
             age = datetime.now(created.tzinfo) - created
-            if age >= timedelta(minutes=45):
-                ec2.delete_nat_gateway(NatGatewayId = gatewayId)
-                gw_change_list.append({'action' : 'deleted', 'gatewayId' : gatewayId, 'age' : ('%s' % age)})
+            
+            if lastRequested != None:
+                inactive = datetime.utcnow() - parser.isoparse(lastRequested)
             else:
-                gw_change_list.append({'action' : 'skipped', 'gatewayId' : gatewayId, 'age' : ('%s' % age)})
+                inactive = age
+            
+            if inactive >= timedelta(minutes=45):
+                ec2.delete_nat_gateway(NatGatewayId = gatewayId)
+                gw_change_list.append({'action' : 'deleted', 'gatewayId' : gatewayId, 'age' : ('%s' % age), 'inactive' : ('%s' % inactive)})
+            else:
+                gw_change_list.append({'action' : 'skipped', 'gatewayId' : gatewayId, 'age' : ('%s' % age), 'inactive' : ('%s' % inactive)})
         info['nat-changed'] = gw_change_list
     
     return info
@@ -110,5 +132,10 @@ def request_gateway_handler(event, context):
         info['nat-launched'] = gatewayId
     else: 
         info['nat-existing'] = True
+        for (gatewayId, state, created, lastRequested) in gateway_list:
+            ec2.create_tags(
+              Resources=[gatewayId]
+            , Tags=[ {'Key' : 'LastRequested', 'Value' : '%s' % datetime.utcnow() } ]
+           )
         
     return info
