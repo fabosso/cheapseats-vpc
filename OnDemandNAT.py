@@ -64,11 +64,10 @@ def update_route_tables(gatewayId):
     for routeTableId in routes_list:
         try:
             ec2.delete_route(RouteTableId = routeTableId, DestinationCidrBlock = '0.0.0.0/0')
-        except ClientError as e :
-            if e.error.get('Code', None) != 'FIXME':
+        except ClientError as e:
+            # We expect the occasional failure where the route doesn't exist - this can be safely ignored.
+            if e.response['Error']['Code'] != 'InvalidRoute.NotFound':
                 raise e
-            else:
-                print('%s\n' % e)
         ec2.create_route(RouteTableId = routeTableId, DestinationCidrBlock = '0.0.0.0/0', NatGatewayId = gatewayId)
     
 def ec2_change_handler(event, context):
