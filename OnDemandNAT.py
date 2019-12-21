@@ -116,7 +116,7 @@ def autolaunch_handler(event, context):
                 gw_change_list.append({'action' : 'skipped', 'gatewayId' : gatewayId, 'age' : ('%s' % age), 'inactive' : ('%s' % inactive)})
         info['nat-changed'] = gw_change_list
         
-    print("SUMMARY:\n%s\n" % json.dumps(info)
+    print("SUMMARY:\n%s\n" % json.dumps(info))
     return info
 
     
