@@ -115,7 +115,8 @@ def autolaunch_handler(event, context):
             else:
                 gw_change_list.append({'action' : 'skipped', 'gatewayId' : gatewayId, 'age' : ('%s' % age), 'inactive' : ('%s' % inactive)})
         info['nat-changed'] = gw_change_list
-    
+        
+    print("SUMMARY:\n%s\n" % json.dumps(info)
     return info
 
     
@@ -137,5 +138,14 @@ def request_gateway_handler(event, context):
               Resources=[gatewayId]
             , Tags=[ {'Key' : 'LastRequested', 'Value' : '%s' % datetime.utcnow() } ]
            )
+
+    if 'CodePipeline.job' in event:
+        job = event['CodePipeline.job']
         
+        cp = boto3.client('codepipeline')
+        cp.put_job_success_result(
+          jobId=job['id']
+        )
+        
+    print("SUMMARY:\n%s\n" % json.dumps(info))
     return info

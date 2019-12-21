@@ -23,6 +23,14 @@
                 "ec2:DescribeRouteTables"
             ],
             "Resource": "*"
+        },
+        {
+            "Action": [
+                "codepipeline:PutJobSuccessResult",
+                "codepipeline:PutJobFailureResult"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
         }
     ]
 }
