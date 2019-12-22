@@ -121,31 +121,45 @@ def autolaunch_handler(event, context):
 
     
 def request_gateway_handler(event, context):
-    gateway_list = vpc_has_natgw()
+    try:
+        gateway_list = vpc_has_natgw()
     
-    info = {
-        'nat_needed' : 'requested'
-    }
+        info = {
+            'nat_needed' : 'requested'
+        }
     
-    if gateway_list == None: #and nat_needed == True:
-        gatewayId = create_nat_gateway()
-        update_route_tables(gatewayId)
-        info['nat-launched'] = gatewayId
-    else: 
-        info['nat-existing'] = True
-        for (gatewayId, state, created, lastRequested) in gateway_list:
-            ec2.create_tags(
-              Resources=[gatewayId]
-            , Tags=[ {'Key' : 'LastRequested', 'Value' : '%s' % datetime.utcnow() } ]
-           )
+        if gateway_list == None: #and nat_needed == True:
+            gatewayId = create_nat_gateway()
+            update_route_tables(gatewayId)
+            info['nat-launched'] = gatewayId
+        else: 
+            info['nat-existing'] = True
+            for (gatewayId, state, created, lastRequested) in gateway_list:
+                ec2.create_tags(
+                  Resources=[gatewayId]
+                , Tags=[ {'Key' : 'LastRequested', 'Value' : '%s' % datetime.utcnow() } ]
+               )
 
-    if 'CodePipeline.job' in event:
-        job = event['CodePipeline.job']
+        if 'CodePipeline.job' in event:
+            job = event['CodePipeline.job']
         
-        cp = boto3.client('codepipeline')
-        cp.put_job_success_result(
-          jobId=job['id']
-        )
+            cp = boto3.client('codepipeline')
+            cp.put_job_success_result(
+              jobId=job['id']
+            )
         
-    print("SUMMARY:\n%s\n" % json.dumps(info))
-    return info
+        print("SUMMARY:\n%s\n" % json.dumps(info))
+        return info        
+    except Exception as e:
+        if 'CodePipeline.job' in event:
+            job = event['CodePipeline.job']
+        
+            cp = boto3.client('codepipeline')
+            cp.put_job_failure_result(
+              jobId=job['id'],
+              failureDetails= {
+                 "type" : "JobFailed"
+              ,  "message" : '%s' % e
+              }
+            )
+        raise e
