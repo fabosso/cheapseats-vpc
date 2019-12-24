@@ -166,7 +166,31 @@
                 "lambda:UntagResource"
             ],
             "Resource": "arn:aws:lambda:*:495602461790:function:xonotic-server*"
+        },
+        {
+            "Sid": "XonoticIAMCreate",
+            "Effect": "Allow",
+            "Action": [
+                "iam:GetRole",
+                "iam:UpdateAssumeRolePolicy",
+                "iam:PassRole",
+                "iam:GetPolicy",
+                "iam:DeleteRolePolicy",
+                "iam:DeletePolicy",
+                "iam:CreateRole",
+                "iam:DeleteRole",
+                "iam:AttachRolePolicy",
+                "iam:UpdateRole",
+                "iam:PutRolePolicy",
+                "iam:GetRolePolicy",
+                "iam:ListRoleTags",
+                "iam:TagRole",
+                "iam:UntagRole"
+            ],
+            "Resource": [
+                "arn:aws:iam::495602461790:role/xonotic-server*",
+                "arn:aws:iam::495602461790:policy/xonotic-server*"
+            ]
         }
- 
     ]
 }
