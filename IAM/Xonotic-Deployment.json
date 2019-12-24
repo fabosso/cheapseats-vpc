@@ -132,7 +132,8 @@
                 "dynamodb:UntagResource",
                 "dynamodb:DescribeTable",
                 "dynamodb:DeleteTable",
-                "dynamodb:UpdateTable"
+                "dynamodb:UpdateTable",
+                "dynamodb:ListTagsOfResource"
             ],
             "Resource": "arn:aws:dynamodb:*:495602461790:table/xonotic-server*"
         },
