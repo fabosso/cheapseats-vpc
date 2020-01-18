@@ -1,0 +1,123 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "HomeFinCFFetchParameters",
+            "Effect": "Allow",
+            "Action": [
+                "ssm:GetParameters",
+                "ssm:GetParameter"
+            ],
+            "Resource": [
+                "arn:aws:ssm:*:495602461790:parameter/Deimos/*",
+                "arn:aws:ssm:*:495602461790:parameter/HomeFin/*"
+            ]
+        },
+        {
+            "Sid": "HomeFinCFSetParameters",
+            "Effect": "Allow",
+            "Action": [
+                "ssm:PutParameter",
+                "ssm:DeleteParameter",
+                "ssm:AddTagsToResource",
+                "ssm:RemoveTagsFromResource"
+            ],
+            "Resource": [
+                "arn:aws:ssm:*:495602461790:parameter/HomeFin/*"
+            ]
+        },
+        {
+            "Sid": "HomeFinCFConfigBucketA",
+            "Effect": "Allow",
+            "Action": "s3:ListBucket",
+            "Resource": [
+                "arn:aws:s3:::deimos-configmgmt"
+            ]
+        },
+        {
+            "Sid": "HomeFinCFBucketAccess",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject",
+                "s3:GetObjectVersion"
+            ],
+            "Resource": [
+                "arn:aws:s3:::deimos-configmgmt/HomeFin/*"
+            ]
+        },
+        {
+            "Sid": "HomeFinCFCreateBucket",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetBucketPolicyStatus",
+                "s3:PutAnalyticsConfiguration",
+                "s3:PutAccelerateConfiguration",
+                "s3:PutMetricsConfiguration",
+                "s3:PutReplicationConfiguration",
+                "s3:CreateBucket",
+                "s3:PutBucketCORS",
+                "s3:DeleteBucketPolicy",
+                "s3:GetBucketPolicy",
+                "s3:PutInventoryConfiguration",
+                "s3:PutEncryptionConfiguration",
+                "s3:GetBucketObjectLockConfiguration",
+                "s3:PutBucketNotification",
+                "s3:DeleteBucketWebsite",
+                "s3:PutBucketWebsite",
+                "s3:PutBucketTagging",
+                "s3:PutBucketLogging",
+                "s3:PutLifecycleConfiguration",
+                "s3:PutBucketPolicy",
+                "s3:PutBucketObjectLockConfiguration",
+                "s3:DeleteBucket",
+                "s3:PutBucketVersioning"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "HomeFinDynamoDBCreate",
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:CreateTable",
+                "dynamodb:TagResource",
+                "dynamodb:UntagResource",
+                "dynamodb:DescribeTable",
+                "dynamodb:DeleteTable",
+                "dynamodb:UpdateTable",
+                "dynamodb:ListTagsOfResource"
+            ],
+            "Resource": "arn:aws:dynamodb:*:495602461790:table/homefin*"
+        },
+        {
+            "Sid": "HomeFinDynamoDBList",
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:ListGlobalTables",
+                "dynamodb:ListTables",
+                "dynamodb:DescribeReservedCapacity",
+                "dynamodb:DescribeLimits"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "HomeFinLambdaCreate",
+            "Effect": "Allow",
+            "Action": [
+                "lambda:CreateFunction",
+                "lambda:UpdateFunctionCode",
+                "lambda:AddPermission",
+                "lambda:GetFunction",
+                "lambda:UpdateFunctionConfiguration",
+                "lambda:GetFunctionConfiguration",
+                "lambda:DeleteFunction",
+                "lambda:PublishVersion",
+                "lambda:GetPolicy",
+                "lambda:RemovePermission",
+                "lambda:ListTags",
+                "lambda:TagResource",
+                "lambda:UntagResource"
+            ],
+            "Resource": "arn:aws:lambda:*:495602461790:function:homefin*" 
+        }
+    ]
+}
