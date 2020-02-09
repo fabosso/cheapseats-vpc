@@ -118,6 +118,40 @@
                 "lambda:UntagResource"
             ],
             "Resource": "arn:aws:lambda:*:495602461790:function:homefin*" 
+        },
+        {
+            "Sid": "HomeFinKmsCreate",
+            "Effect": "Allow",
+            "Action": [
+                "kms:Create*",
+                "kms:Describe*",
+                "kms:Enable*",
+                "kms:List*",
+                "kms:Put*",
+                "kms:Update*",
+                "kms:Revoke*",
+                "kms:Disable*",
+                "kms:Get*",
+                "kms:Delete*",
+                "kms:ScheduleKeyDeletion",
+                "kms:CancelKeyDeletion",
+                "kms:TagResource",
+                "kms:UntagResource"
+            ],
+            "Resource": "*" 
+        },
+        {
+            "Sid": "HomeFinIamCreate",
+            "Effect": "Allow",
+            "Action": [
+                "iam:Create*",
+                "iam:Delete*",
+                "iam:List*",
+                "iam:Put*",
+                "iam:Update*",
+                "iam:Attach*"
+            ],
+            "Resource": "*" 
         }
     ]
 }
