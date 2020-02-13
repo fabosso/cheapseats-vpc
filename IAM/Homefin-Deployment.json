@@ -173,6 +173,7 @@
                 "glue:GetDatabase",
                 "glue:GetTable",
                 "glue:ListCrawlers",
+                "glue:StopCrawler",
                 "glue:TagResource",
                 "glue:UntagResource",
                 "glue:GetTags"
