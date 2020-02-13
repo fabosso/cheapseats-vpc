@@ -179,6 +179,7 @@
             "Resource": [
                "arn:aws:glue:*:495602461790:catalog",
                "arn:aws:glue:*:495602461790:database/homefin",
+               "arn:aws:glue:*:495602461790:userDefinedFunction/homefin/*",
                "arn:aws:glue:*:495602461790:crawler/*",
                "arn:aws:glue:*:495602461790:table/homefin/*"
             ]
