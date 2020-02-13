@@ -151,7 +151,8 @@
                 "iam:Update*",
                 "iam:Attach*",
                 "iam:Tag*",
-                "iam:Untag"
+                "iam:Untag",
+                "iam:PassRole"
             ],
             "Resource": "*" 
         },
