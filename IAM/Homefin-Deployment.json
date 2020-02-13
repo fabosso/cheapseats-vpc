@@ -154,6 +154,34 @@
                 "iam:Untag"
             ],
             "Resource": "*" 
+        },
+        {
+            "Sid": "HomeFinGlueCreate",
+            "Effect": "Allow",
+            "Action": [
+                "glue:CreateDatabase",
+                "glue:CreateCrawler",
+                "glue:CreateTable",
+                "glue:DeleteDatabase",
+                "glue:DeleteCrawler",
+                "glue:DeleteTable",
+                "glue:UpdateDatabase",
+                "glue:UpdateTable",
+                "glue:GetCrawlers",
+                "glue:GetCrawler",
+                "glue:GetDatabase",
+                "glue:GetTable",
+                "glue:ListCrawlers",
+                "glue:TagResource",
+                "glue:UntagResource",
+                "glue:GetTags"
+            ],
+            "Resource": [
+               "arn:aws:glue:*:495602461790:database/homefin",
+               "arn:aws:glue:*:495602461790:crawler/*",
+               "arn:aws:glue:*:495602461790:table/homefin/*"
+            ]
         }
+
     ]
 }
