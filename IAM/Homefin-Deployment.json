@@ -164,18 +164,14 @@
                 "glue:CreateCrawler",
                 "glue:CreateTable",
                 "glue:DeleteDatabase",
-                "glue:CreateSecurityConfiguration",
                 "glue:DeleteCrawler",
                 "glue:DeleteTable",
-                "glue:DeleteSecurityConfiguration",
                 "glue:UpdateDatabase",
                 "glue:UpdateTable",
                 "glue:UpdateCrawler",
                 "glue:GetCrawlers",
                 "glue:GetCrawler",
                 "glue:GetDatabase",
-                "glue:GetSecurityConfiguration",
-                "glue:GetSecurityConfigurations",
                 "glue:GetTable",
                 "glue:ListCrawlers",
                 "glue:StopCrawler",
@@ -190,7 +186,17 @@
                "arn:aws:glue:*:495602461790:crawler/*",
                "arn:aws:glue:*:495602461790:table/homefin/*"
             ]
+        },
+        {
+            "Sid": "HomeFinGlueSecCreate",
+            "Effect": "Allow",
+            "Action" : [
+                "glue:CreateSecurityConfiguration",
+                "glue:DeleteSecurityConfiguration",
+                "glue:GetSecurityConfiguration",
+                "glue:GetSecurityConfigurations"
+            ],
+            "Resource" : "*"
         }
-
     ]
 }
