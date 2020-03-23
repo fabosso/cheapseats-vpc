@@ -192,6 +192,27 @@
                 "arn:aws:iam::495602461790:role/xonotic-server*",
                 "arn:aws:iam::495602461790:policy/xonotic-server*"
             ]
+        },
+        {
+            "Sid": "XonoticECSCreate",
+            "Effect": "Allow",
+            "Action": [
+              "ecs:*"
+            ],
+            "Resource" : "*"
+        },
+        {
+            "Sid": "XonoticLogsCreate",
+            "Effect": "Allow",
+            "Action": [
+              "logs:CreateLogGroup",
+              "logs:DeleteLogGroup",
+              "logs:PutRetentionPolicy",
+              "logs:DeleteRetentionPolicy",
+              "logs:DescribeLogGroups",
+              "logs:TagLogGroup"
+            ],
+            "Resource" : "*"
         }
     ]
 }
