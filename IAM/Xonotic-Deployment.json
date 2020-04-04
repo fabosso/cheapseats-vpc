@@ -176,6 +176,7 @@
                 "iam:UpdateAssumeRolePolicy",
                 "iam:PassRole",
                 "iam:GetPolicy",
+                "iam:GetRole",
                 "iam:DeleteRolePolicy",
                 "iam:DeletePolicy",
                 "iam:CreateRole",
@@ -190,6 +191,8 @@
             ],
             "Resource": [
                 "arn:aws:iam::495602461790:role/xonotic-server*",
+                "arn:aws:iam::495602461790:role/xonotic/*",
+                "arn:aws:iam::495602461790:role/*",
                 "arn:aws:iam::495602461790:policy/xonotic-server*"
             ]
         },
