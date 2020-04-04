@@ -19,7 +19,23 @@
       "Type" : "AWS::EC2::VPC",
       "Properties" : {
         "CidrBlock" : { "Ref" : "AwsCIDRRange" },
-        "EnableDnsSupport" : true
+        "EnableDnsSupport" : true,
+        "Tags" : [
+          { "Key" : "Name", "Value" : "DeimosVPC" }
+        ]       
+      }
+    },
+    
+    "PublicSubnetA" : {
+      "Type" : "AWS::EC2::Subnet",
+      "Properties" : {
+        "VpcId" : { "Ref" : "DeimosVpc" },
+        "CidrBlock" : {"Fn::Select" : [ 0, { "Fn::Cidr" : [ { "Ref" : "AwsCIDRRange"}, 6, 8 ] } ] },
+        "AvailabilityZone" : { "Fn::Select" : [ 0 , { "Fn::GetAZs" : { "Ref" : "AWS::Region" } } ] },
+        "Tags" : [
+          { "Key" : "Name", "Value" : "PublicSubnet-A" },
+          { "Key" : "RoutingType", "Value" : "Public" }
+        ]
       }
     }
   },
