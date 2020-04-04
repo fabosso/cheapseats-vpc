@@ -1,0 +1,27 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+
+  "Description" : "Core Deimos VPC and IAM Infrastructure",
+  
+  "Parameters" : {
+    "AwsCIDRRange" : {
+      "Type" : "String",
+      "Description" : "CIDR Range for AWS Resources"
+    },
+    "VpnCIDRRange" : {
+      "Type" : "String",
+      "Description" : "CIDR Range for Incoming VPN Connectivity"
+    }
+  },
+  
+  "Resources" : {
+    "DeimosVPC" : {
+      "Type" : "AWS::EC2::VPC",
+      "Properties" : {
+        "CidrBlock" : { "Ref" : "AwsCIDRRange" },
+        "EnableDnsSupport" : true
+      }
+    }
+  }
+}
+    
