@@ -46,7 +46,10 @@
     "PublicRouteTable" : {
       "Type" : "AWS::EC2::RouteTable",
       "Properties" : {
-        "VpcId" : { "Ref" : "DeimosVpc" }
+        "VpcId" : { "Ref" : "DeimosVpc" },
+        "Tags" : [
+          { "Key" : "Name", "Value" : "PublicRouteTable" }
+        ]       
       }
     },
 
@@ -77,7 +80,10 @@
     "PrivateRouteTable" : {
       "Type" : "AWS::EC2::RouteTable",
       "Properties" : {
-        "VpcId" : { "Ref" : "DeimosVpc" }
+        "VpcId" : { "Ref" : "DeimosVpc" },
+        "Tags" : [
+          { "Key" : "Name", "Value" : "PrivateRouteTable" }
+        ]       
       }
     },
 
