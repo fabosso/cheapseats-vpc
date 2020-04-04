@@ -31,6 +31,18 @@
       }
     },
 
+    "InternetGateway" : {
+      "Type" : "AWS::EC2::InternetGateway"
+    },
+
+   "IgwAttachment" : {
+     "Type" : "AWS::EC2::VPCGatewayAttachment",
+     "Properties" : {
+       "VpcId" : { "Ref" : "DeimosVpc" },
+       "InternetGatewayId" : { "Ref" : "InternetGateway" }
+     }
+   },
+
     "PublicSubnets" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
