@@ -16,6 +16,10 @@
       "Type" : "String",
       "Description" : "VPC ID of VPC"
     },
+    "RouteTable" : {
+      "Type" : "String",
+      "Description" : "ID of Route Table for Subnet Group"
+    },
     "MaskSize" : {
       "Type" : "Number",
       "Description" : "The number of bits to assign to the subnet mask for each subnet",
@@ -24,12 +28,6 @@
   },
 
   "Resources" : {
-    "RouteTable" : {
-      "Type" : "AWS::EC2::RouteTable",
-      "Properties" : {
-        "VpcId" : { "Ref" : "VpcId" }
-      }
-    },
 
     "SubnetA" : {
       "Type" : "AWS::EC2::Subnet",
@@ -136,11 +134,6 @@
       "Export" : { 
         "Name" : { "Fn::Sub" : "${SubnetGroupName}-CIDR" }
       }
-    },
-
-    "RouteTable" : {
-      "Description" : "Route Table Assigned to this Subnet Group",
-      "Value" : { "Ref" : "RouteTable" }
-    }    
+    }
   }
 }
