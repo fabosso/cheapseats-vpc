@@ -30,11 +30,12 @@
       "Type" : "AWS::EC2::Subnet",
       "Properties" : {
         "VpcId" : { "Ref" : "DeimosVpc" },
-        "CidrBlock" : {"Fn::Select" : [ 0, { "Fn::Cidr" : [ { "Ref" : "AwsCIDRRange"}, "6", "8" ] } ] },
+        "CidrBlock" : "192.168.128.0/24" ,
         "AvailabilityZone" : { "Fn::Select" : [ 0 , { "Fn::GetAZs" : { "Ref" : "AWS::Region" } } ] },
         "Tags" : [
           { "Key" : "Name", "Value" : "PublicSubnet-A" },
-          { "Key" : "RoutingType", "Value" : "Public" }
+          { "Key" : "RoutingType", "Value" : "Public" },
+          { "Key" : "MappedCidr", "Value" : {"Fn::Select" : [ 0, { "Fn::Cidr" : [ { "Ref" : "AwsCIDRRange"}, "6", "8" ] } ] } }
         ]
       }
     }
