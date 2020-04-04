@@ -46,6 +46,12 @@
             "Resource": [
                 "arn:aws:ssm:*:495602461790:parameter/Deimos/*"
             ]
+        },
+        {
+            "Sid": "FetchCFResources",
+            "Effect": "Allow",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::deimos-configmgmt/Templates/*"
         }
     ]
 }
