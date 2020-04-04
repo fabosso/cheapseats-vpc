@@ -15,11 +15,21 @@
   },
   
   "Resources" : {
-    "DeimosVPC" : {
+    "DeimosVpc" : {
       "Type" : "AWS::EC2::VPC",
       "Properties" : {
         "CidrBlock" : { "Ref" : "AwsCIDRRange" },
         "EnableDnsSupport" : true
+      }
+    }
+  },
+  
+  "Outputs" : {
+    "DeimosVpcId" : {
+      "Description" : "VPC ID of Deimos VPC",
+      "Value" : { "Ref" : "DeimosVpc" },
+      "Export" : {
+        "Name" : "Deimos-VPCID"
       }
     }
   }
