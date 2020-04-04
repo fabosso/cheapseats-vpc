@@ -35,7 +35,7 @@
         "Tags" : [
           { "Key" : "Name", "Value" : "PublicSubnet-A" },
           { "Key" : "RoutingType", "Value" : "Public" },
-          { "Key" : "MappedCidr", "Value" : { "Fn::Cidr" : [ "192.168.128.0/25", 1, 6 ] } }
+          { "Key" : "MappedCidr", "Value" : { "Fn::Select" : [ 0,  { "Fn::Cidr" : [ "192.168.128.0/17", 1, 8 ] } ] } }
         ]
       }
     }
