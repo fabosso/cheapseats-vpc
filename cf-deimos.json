@@ -11,6 +11,11 @@
     "VpnCIDRRange" : {
       "Type" : "String",
       "Description" : "CIDR Range for Incoming VPN Connectivity"
+    },
+    "ConfigBucket" : {
+       "Type" : "AWS::SSM::Parameter::Value<String>",
+       "Description" : "Deimos Configuration Bucket",
+       "Default" : "/Deimos/ConfigBucket"
     }
   },
   
@@ -23,6 +28,18 @@
         "Tags" : [
           { "Key" : "Name", "Value" : "DeimosVPC" }
         ]       
+      }
+    },
+
+    "PublicSubnets" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "Parameters" : {
+          "SubnetGroupName" : "Public",
+          "CidrRange" : { "Fn::Select" : [ 0,  { "Fn::Cidr" : [ { "Ref" : "AwsCIDRRange" }, 2, 14 ] } ] },
+          "MaskSize" : 8
+        },
+        "TemplateURL" : { "Fn::Sub" : "https://s3.amazonaws.com/${ConfigBucket}/Templates/SubnetGroup.json"}
       }
     }
   },
