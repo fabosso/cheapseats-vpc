@@ -63,6 +63,15 @@
       }
     },
 
+    "CidrParameters" : {
+      "Type" : "AWS::SSM::Parameter",
+      "Properties" : {
+        "Name" : { "Fn::Sub" : "/Deimos/Subnets/${SubnetGroupName}-CIDR" },
+        "Type" : "String",
+        "Value" : { "Ref" : "CidrRange" }
+      }
+    },
+
     "SubnetParameters" : {
       "Type" : "AWS::SSM::Parameter",
       "Properties" : {
