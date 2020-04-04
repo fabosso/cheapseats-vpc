@@ -1,0 +1,37 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+
+  "Description" : "Core Deimos VPC and IAM Infrastructure",
+
+  "Parameters" : {
+    "SubnetGroupName" : {
+      "Type" : "String",
+      "Description" : "Name used for this subnet group"
+    },
+    "CidrRange" : {
+      "Type" : "String",
+      "Description" : "CIDR Range for these subnets"
+    },
+    "MaskSize" : {
+      "Type" : "Number",
+      "Description" : "The number of bits to assign to the subnet mask for each subnet",
+      "Default" : 8
+    }
+  },
+
+  "Resources" : {
+    "SubnetA" : {
+      "Type" : "AWS::EC2::Subnet",
+      "Properties" : {
+        "VpcId" : { "Ref" : "DeimosVpc" },
+        "CidrBlock" : { "Fn::Select" : [ 0,  { "Fn::Cidr" : [ "192.168.128.0/17", 1, 8 ] } ] },
+        "AvailabilityZone" : { "Fn::Select" : [ 0 , { "Fn::GetAZs" : { "Ref" : "AWS::Region" } } ] },
+        "Tags" : [
+          { "Key" : "Name", "Value" : "A" },
+          { "Key" : "SubnetGroup", "Value" : { "Ref" : "SubnetGroupName" }
+        ]
+      }
+    }
+  }
+
+}
