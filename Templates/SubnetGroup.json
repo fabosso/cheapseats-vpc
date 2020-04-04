@@ -61,6 +61,33 @@
           { "Key" : "SubnetGroup", "Value" : { "Ref" : "SubnetGroupName" } }
         ]
       }
+    },
+
+    "SubnetParameters" : {
+      "Type" : "AWS::SSM::Parameter",
+      "Properties" : {
+        "Name" : { "Fn::Sub" : "/Deimos/Subnets/${SubnetGroupName}" },
+        "Type" : "StringList",
+        "Value" : { "Fn::Join" : [ ",", [ 
+          { "Ref" : "SubnetA" }
+        , { "Ref" : "SubnetB" }
+        , { "Ref" : "SubnetC" }
+        ] ] }
+      }
+    }
+  },
+
+  "Outputs" : { 
+    "SubnetList" : {
+      "Description" : "List of Subnets within a group",
+      "Value" : { "Fn::Join" : [ ",", [ 
+        { "Ref" : "SubnetA" }
+      , { "Ref" : "SubnetB" }
+      , { "Ref" : "SubnetC" }
+      ] ] },
+      "Export" : { 
+        "Name" : { "Fn::Sub" : "${SubnetGroupName}-Subnets" }
+      }
     }
   }
 }
