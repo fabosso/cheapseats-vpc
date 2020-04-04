@@ -42,7 +42,23 @@
         },
         "TemplateURL" : { "Fn::Sub" : "https://${ConfigBucket}.s3.${AWS::Region}.amazonaws.com/Templates/SubnetGroup.json"}
       }
+    },
+
+    "PrivateSubnets" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "Parameters" : {
+          "SubnetGroupName" : "Private",
+          "CidrRange" : { "Fn::Select" : [ 1,  { "Fn::Cidr" : [ { "Ref" : "AwsCIDRRange" }, 2, 14 ] } ] },
+          "VpcId" : { "Ref" : "DeimosVpc" },
+          "MaskSize" : 8
+        },
+        "TemplateURL" : { "Fn::Sub" : "https://${ConfigBucket}.s3.${AWS::Region}.amazonaws.com/Templates/SubnetGroup.json"}
+      }
     }
+  },
+  
+  "Outputs" : {
   },
   
   "Outputs" : {
