@@ -9,6 +9,8 @@
                 "ec2:CreateVpc",
                 "ec2:DeleteVpc",
                 "ec2:ModifyVpcAttribute",
+                "ec2:CreateInternetGateway",
+                "ec2:DeleteInternetGateway",
                 "ec2:RebootInstances",
                 "ec2:CreateDhcpOptions",
                 "ec2:CreateSubnet",
