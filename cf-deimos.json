@@ -37,6 +37,7 @@
         "Parameters" : {
           "SubnetGroupName" : "Public",
           "CidrRange" : { "Fn::Select" : [ 0,  { "Fn::Cidr" : [ { "Ref" : "AwsCIDRRange" }, 2, 14 ] } ] },
+          "VpcId" : { "Ref" : "DeimosVpc" },
           "MaskSize" : 8
         },
         "TemplateURL" : { "Fn::Sub" : "https://${ConfigBucket}.s3.${AWS::Region}.amazonaws.com/Templates/SubnetGroup.json"}
