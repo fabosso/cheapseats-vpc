@@ -97,6 +97,14 @@
       "Export" : { 
         "Name" : { "Fn::Sub" : "${SubnetGroupName}-Subnets" }
       }
+    },
+
+    "SubnetCidr" : {
+      "Description" : "CIDR Range of the Entire Subnet Group",
+      "Value" : { "Ref" : "CidrRange" },
+      "Export" : { 
+        "Name" : { "Fn::Sub" : "${SubnetGroupName}-CIDR" }
+      }
     }
   }
 }
