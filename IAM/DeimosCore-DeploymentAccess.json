@@ -30,6 +30,21 @@
                 "ec2:DeleteTags"
             ],
             "Resource": "*"
+        },
+        {
+            "Sid": "DeimosCoreParameters",
+            "Effect": "Allow",
+            "Action": [
+                "ssm:GetParameters",
+                "ssm:GetParameter",
+                "ssm:PutParameter",
+                "ssm:DeleteParameter",
+                "ssm:AddTagsToResource",
+                "ssm:RemoveTagsFromResource"
+            ],
+            "Resource": [
+                "arn:aws:ssm:*:495602461790:parameter/Deimos/*"
+            ]
         }
     ]
 }
