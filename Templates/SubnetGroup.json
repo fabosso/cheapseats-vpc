@@ -24,6 +24,13 @@
   },
 
   "Resources" : {
+    "RouteTable" : {
+      "Type" : "AWS::EC2::RouteTable",
+      "Properties" : {
+        "VpcId" : { "Ref" : "VpcId" }
+      }
+    },
+
     "SubnetA" : {
       "Type" : "AWS::EC2::Subnet",
       "Properties" : {
@@ -34,6 +41,14 @@
           { "Key" : "Name", "Value" : { "Fn::Sub" : "${SubnetGroupName}-A" } },
           { "Key" : "SubnetGroup", "Value" : { "Ref" : "SubnetGroupName" } }
         ]
+      }
+    },
+
+    "SubnetARouteAssociation" : {
+      "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties" : {
+        "RouteTableId" : { "Ref" : "RouteTable" },
+        "SubnetId" : { "Ref" : "SubnetA" }
       }
     },
 
@@ -50,6 +65,14 @@
       }
     },
 
+    "SubnetBRouteAssociation" : {
+      "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties" : {
+        "RouteTableId" : { "Ref" : "RouteTable" },
+        "SubnetId" : { "Ref" : "SubnetB" }
+      }
+    },
+
     "SubnetC" : {
       "Type" : "AWS::EC2::Subnet",
       "Properties" : {
@@ -60,6 +83,14 @@
           { "Key" : "Name", "Value" : { "Fn::Sub" : "${SubnetGroupName}-C" } },
           { "Key" : "SubnetGroup", "Value" : { "Ref" : "SubnetGroupName" } }
         ]
+      }
+    },
+
+    "SubnetCRouteAssociation" : {
+      "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties" : {
+        "RouteTableId" : { "Ref" : "RouteTable" },
+        "SubnetId" : { "Ref" : "SubnetC" }
       }
     },
 
@@ -105,6 +136,11 @@
       "Export" : { 
         "Name" : { "Fn::Sub" : "${SubnetGroupName}-CIDR" }
       }
-    }
+    },
+
+    "RouteTable" : {
+      "Description" : "Route Table Assigned to this Subnet Group",
+      "Value" : { "Ref" : "RouteTable" }
+    }    
   }
 }
