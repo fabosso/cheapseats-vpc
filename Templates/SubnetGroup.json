@@ -28,10 +28,36 @@
       "Type" : "AWS::EC2::Subnet",
       "Properties" : {
         "VpcId" : { "Ref" : "VpcId" },
-        "CidrBlock" : { "Fn::Select" : [ 0,  { "Fn::Cidr" : [ { "Ref" : "CidrRange" }, 1, 8 ] } ] },
+        "CidrBlock" : { "Fn::Select" : [ 0,  { "Fn::Cidr" : [ { "Ref" : "CidrRange" }, 3, { "Ref" : "MaskSize" } ] } ] },
         "AvailabilityZone" : { "Fn::Select" : [ 0 , { "Fn::GetAZs" : { "Ref" : "AWS::Region" } } ] },
         "Tags" : [
-          { "Key" : "Name", "Value" : "A" },
+          { "Key" : "Name", "Value" : { "Fn::Sub" : "${SubnetGroupName}-A" } },
+          { "Key" : "SubnetGroup", "Value" : { "Ref" : "SubnetGroupName" } }
+        ]
+      }
+    },
+
+    "SubnetB" : {
+      "Type" : "AWS::EC2::Subnet",
+      "Properties" : {
+        "VpcId" : { "Ref" : "VpcId" },
+        "CidrBlock" : { "Fn::Select" : [ 1,  { "Fn::Cidr" : [ { "Ref" : "CidrRange" }, 3, { "Ref" : "MaskSize" } ] } ] },
+        "AvailabilityZone" : { "Fn::Select" : [ 1 , { "Fn::GetAZs" : { "Ref" : "AWS::Region" } } ] },
+        "Tags" : [
+          { "Key" : "Name", "Value" : { "Fn::Sub" : "${SubnetGroupName}-B" } },
+          { "Key" : "SubnetGroup", "Value" : { "Ref" : "SubnetGroupName" } }
+        ]
+      }
+    },
+
+    "SubnetC" : {
+      "Type" : "AWS::EC2::Subnet",
+      "Properties" : {
+        "VpcId" : { "Ref" : "VpcId" },
+        "CidrBlock" : { "Fn::Select" : [ 2,  { "Fn::Cidr" : [ { "Ref" : "CidrRange" }, 3, { "Ref" : "MaskSize" } ] } ] },
+        "AvailabilityZone" : { "Fn::Select" : [ 2 , { "Fn::GetAZs" : { "Ref" : "AWS::Region" } } ] },
+        "Tags" : [
+          { "Key" : "Name", "Value" : { "Fn::Sub" : "${SubnetGroupName}-C" } },
           { "Key" : "SubnetGroup", "Value" : { "Ref" : "SubnetGroupName" } }
         ]
       }
