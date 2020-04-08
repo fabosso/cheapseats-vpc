@@ -1,0 +1,25 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.8
+    commands:
+
+      # Upgrade AWS CLI to the latest version
+      - pip install --upgrade awscli
+  build: 
+    commands:
+      - echo DeploymentBucket - $S3_BUCKET
+artifacts:
+  secondary-artifacts:
+    Deimos-CloudFormation:
+      base-directory: ./
+      files:
+        - cf-deimos.json
+    Deimos-Resources:
+      base-directory: Resources
+      files:
+        - 'Resources/**/*'
+        
+    
