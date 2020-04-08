@@ -13,11 +13,11 @@ phases:
       - echo DeploymentBucket - $S3_BUCKET
 artifacts:
   secondary-artifacts:
-    Deimos-CloudFormation:
+    DeimosCloudFormation:
       base-directory: ./
       files:
         - cf-deimos.json
-    Deimos-Resources:
+    DeimosResources:
       base-directory: Resources
       files:
         - 'Resources/**/*'
