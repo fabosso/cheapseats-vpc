@@ -20,6 +20,6 @@ artifacts:
     DeimosResources:
       base-directory: Resources
       files:
-        - 'Resources/**/*'
+        - '**/*'
         
     
