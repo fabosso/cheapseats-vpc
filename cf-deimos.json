@@ -63,7 +63,10 @@
           "MaskSize" : 8,
           "RouteTable" : { "Ref" : "PublicRouteTable" }
         },
-        "TemplateURL" : { "Fn::Sub" : "https://${ConfigBucket}.s3.${AWS::Region}.amazonaws.com/Templates/SubnetGroup.json"}
+        "TemplateURL" : { "Fn::Sub" : "https://${ConfigBucket}.s3.${AWS::Region}.amazonaws.com/Templates/SubnetGroup.json"},
+        "Tags" : [
+          { "Key" : "Public", "Value" : "Yes" }
+        ]
       }
     },
 
@@ -97,7 +100,10 @@
           "MaskSize" : 8,
           "RouteTable" : { "Ref" : "PrivateRouteTable" }
         },
-        "TemplateURL" : { "Fn::Sub" : "https://${ConfigBucket}.s3.${AWS::Region}.amazonaws.com/Templates/SubnetGroup.json"}
+        "TemplateURL" : { "Fn::Sub" : "https://${ConfigBucket}.s3.${AWS::Region}.amazonaws.com/Templates/SubnetGroup.json"},
+        "Tags" : [
+          { "Key" : "Public", "Value" : "No" }
+        ]
       }
     }
   },
