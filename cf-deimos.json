@@ -85,7 +85,8 @@
       "Properties" : {
         "VpcId" : { "Ref" : "DeimosVpc" },
         "Tags" : [
-          { "Key" : "Name", "Value" : "PrivateRouteTable" }
+          { "Key" : "Name", "Value" : "PrivateRouteTable" },
+          { "Key" : "OnDemandNAT", "Value" : "True" }
         ]       
       }
     },
