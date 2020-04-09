@@ -57,7 +57,33 @@
             "Sid": "FetchCFResources",
             "Effect": "Allow",
             "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::deimos-configmgmt/Templates/*"
+            "Resource": "arn:aws:s3:::deimos-configmgmt/Resources/*"
+        },
+        {
+            "Sid": "DeimosCoreIAM",
+            "Effect": "Allow",
+            "Action": [
+                "iam:GetRole",
+                "iam:UpdateAssumeRolePolicy",
+                "iam:PassRole",
+                "iam:GetPolicy",
+                "iam:GetRole",
+                "iam:DeleteRolePolicy",
+                "iam:DeletePolicy",
+                "iam:CreateRole",
+                "iam:DeleteRole",
+                "iam:AttachRolePolicy",
+                "iam:UpdateRole",
+                "iam:PutRolePolicy",
+                "iam:GetRolePolicy",
+                "iam:ListRoleTags",
+                "iam:TagRole",
+                "iam:UntagRole"
+            ],
+            "Resource": [
+                "arn:aws:iam::495602461790:role/*",
+                "arn:aws:iam::495602461790:policy/*"
+            ]
         }
     ]
 }
