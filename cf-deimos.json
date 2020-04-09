@@ -63,7 +63,7 @@
           "MaskSize" : 8,
           "RouteTable" : { "Ref" : "PublicRouteTable" }
         },
-        "TemplateURL" : { "Fn::Sub" : "https://${ConfigBucket}.s3.${AWS::Region}.amazonaws.com/Templates/SubnetGroup.json"},
+        "TemplateURL" : { "Fn::Sub" : "https://${ConfigBucket}.s3.${AWS::Region}.amazonaws.com/Resources/Templates/SubnetGroup.json"},
         "Tags" : [
           { "Key" : "Public", "Value" : "Yes" }
         ]
@@ -101,7 +101,7 @@
           "MaskSize" : 8,
           "RouteTable" : { "Ref" : "PrivateRouteTable" }
         },
-        "TemplateURL" : { "Fn::Sub" : "https://${ConfigBucket}.s3.${AWS::Region}.amazonaws.com/Templates/SubnetGroup.json"},
+        "TemplateURL" : { "Fn::Sub" : "https://${ConfigBucket}.s3.${AWS::Region}.amazonaws.com/Resources/Templates/SubnetGroup.json"},
         "Tags" : [
           { "Key" : "Public", "Value" : "No" }
         ]
@@ -130,59 +130,58 @@
             },
             "Action" : [ "sts:AssumeRole" ]
           } ]
-          },
-       "Path" : "/ondemandnat/",
-       "ManagedPolicyArns" : [
-         "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-       ]
-     }
-   },
+        },
+        "Path" : "/ondemandnat/",
+        "ManagedPolicyArns" : [
+          "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+        ]
+      }
+    },
 
     "OnDemandNatLambdaPolicy" : {
-       "DependsOn" : [ "OnDemandNatLambdaRole" ],
-       "Type" : "AWS::IAM::Policy",
-       "Properties" : {
-         "PolicyName" : "OnDemandNat-Policy",
-         "Roles" : [ { "Ref" : "OnDemandNatLambdaRole" } ],
-         "PolicyDocument" : {
-           "Version": "2012-10-17",
-           "Statement": [
-               {
-                   "Sid": "OnDemandNATEC2",
-                   "Effect": "Allow",
-                   "Action": [
-                       "ec2:ReplaceRouteTableAssociation",
-                       "ec2:DescribeInstances",
-                       "ec2:DescribeTags",
-                       "ec2:DescribeAddresses",
-                       "ec2:CreateNatGateway",
-                       "ec2:DeleteRoute",
-                       "ec2:CreateRouteTable",
-                       "ec2:DescribeNatGateways",
-                       "ec2:CreateTags",
-                       "ec2:DescribeVpcAttribute",
-                       "ec2:ReplaceRoute",
-                       "ec2:DeleteRouteTable",
-                       "ec2:CreateRoute",
-                       "ec2:DeleteNatGateway",
-                       "ec2:DescribeSubnets",
-                       "ec2:DescribeRouteTables"
-                   ],
-                   "Resource": "*"
-               },
-               {
-                   "Action": [
-                       "codepipeline:PutJobSuccessResult",
-                       "codepipeline:PutJobFailureResult"
-                   ],
-                   "Effect": "Allow",
-                   "Resource": "*"
-               }
-           ]
-         }
-       }
+      "DependsOn" : [ "OnDemandNatLambdaRole" ],
+      "Type" : "AWS::IAM::Policy",
+      "Properties" : {
+        "PolicyName" : "OnDemandNat-Policy",
+        "Roles" : [ { "Ref" : "OnDemandNatLambdaRole" } ],
+        "PolicyDocument" : {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "OnDemandNATEC2",
+              "Effect": "Allow",
+              "Action": [
+                "ec2:ReplaceRouteTableAssociation",
+                "ec2:DescribeInstances",
+                "ec2:DescribeTags",
+                "ec2:DescribeAddresses",
+                "ec2:CreateNatGateway",
+                "ec2:DeleteRoute",
+                "ec2:CreateRouteTable",
+                "ec2:DescribeNatGateways",
+                "ec2:CreateTags",
+                "ec2:DescribeVpcAttribute",
+                "ec2:ReplaceRoute",
+                "ec2:DeleteRouteTable",
+                "ec2:CreateRoute",
+                "ec2:DeleteNatGateway",
+                "ec2:DescribeSubnets",
+                "ec2:DescribeRouteTables"
+              ],
+              "Resource": "*"
+            },
+            {
+              "Action": [
+                "codepipeline:PutJobSuccessResult",
+                "codepipeline:PutJobFailureResult"
+              ],
+              "Effect": "Allow",
+              "Resource": "*"
+            }
+          ]
+        }
+      }
     },
-    
   },
   
   "Outputs" : {
