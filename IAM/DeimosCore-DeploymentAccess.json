@@ -81,8 +81,7 @@
                 "iam:UntagRole"
             ],
             "Resource": [
-                "arn:aws:iam::495602461790:role/*",
-                "arn:aws:iam::495602461790:policy/*"
+                "*"
             ]
         }
     ]

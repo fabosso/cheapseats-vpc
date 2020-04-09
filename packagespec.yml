@@ -10,7 +10,7 @@ phases:
       - pip install --upgrade awscli
   build: 
     commands:
-      - echo DeploymentBucket - $S3_BUCKET
+      - echo DeploymentBucket - $BUCKET
 artifacts:
   secondary-artifacts:
     DeimosCloudFormation:
