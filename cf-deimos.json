@@ -106,6 +106,16 @@
           { "Key" : "Public", "Value" : "No" }
         ]
       }
+    },
+    
+    "OnDemandNatElasticIP" : {
+      "Type" : "AWS::EC2::EIP",
+      "Properties" : {
+        "Domain" : "vpc",
+        "Tags" : [ 
+          { "Key" : "Name", "Value" : "OnDemandNAT-IPAddr" }
+        ]
+      }
     }
   },
   
