@@ -1,5 +1,9 @@
 version: 0.2
 
+env:
+  variables:
+    PACKAGE_PREFIX: "DeimosCFPackage/"
+
 phases:
   install:
     runtime-versions:
@@ -10,13 +14,13 @@ phases:
       - pip install --upgrade awscli
   build: 
     commands:
-      - env
+      - aws cloudformation package --template-file cf-deimos.json --s3-bucket $PACKAGE_BUCKET --s3-prefix $PACKAGE_PREFIX --output-template-file cf-deimos-packed.json
 artifacts:
   secondary-artifacts:
     DeimosCloudFormation:
       base-directory: ./
       files:
-        - cf-deimos.json
+        - cf-deimos-packed.json
     DeimosResources:
       base-directory: Resources
       files:
