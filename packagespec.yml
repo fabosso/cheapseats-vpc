@@ -14,7 +14,7 @@ phases:
       - pip install --upgrade awscli
   build: 
     commands:
-      - echo Upload Target $PACKAGE_BUCKET > $PACKAGE_PREFIX
+      - echo Upload Target $PACKAGE_BUCKET to $PACKAGE_PREFIX
       - aws cloudformation package --template-file cf-deimos.json --s3-bucket $PACKAGE_BUCKET --s3-prefix $PACKAGE_PREFIX --output-template-file cf-deimos-packed.json
 artifacts:
   secondary-artifacts:
