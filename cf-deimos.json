@@ -186,10 +186,12 @@
     "OnDemandRequestNatLambda" : {
       "Type" : "AWS::Lambda::Function",
       "Properties" : {
+       "FunctionName" : "Deimos-RequestNATGateway",
+       "Description" : "Request a NAT Gateway (Provisioning one if it isn't already available)",
        "Code" : "Lambda-OnDemandNAT/RequestGateway.py",
-       "Handler" : "query-server.fetch_status",
+       "Handler" : "RequestGateway.request_gateway_handler",
        "Runtime" : "python3.6",
-       "Role"    : { "Fn::GetAtt" : [ "OnDemandNatLambdaRole", "Arn" ] },
+       "Role"    : { "Fn::GetAtt" : [ "OnDemandNatLambdaRole", "Arn" ] }
        }
     }
   },
