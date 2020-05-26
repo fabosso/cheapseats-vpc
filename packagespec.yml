@@ -3,7 +3,7 @@ version: 0.2
 env:
   variables:
     PACKAGE_PREFIX: "Packages/DeimosCore"
-    KMS_S3KEY: "aws/s3"
+    KMS_S3KEY: "b9b0289a-a6e1-427c-9686-33472172bc33"
 
 phases:
   install:
