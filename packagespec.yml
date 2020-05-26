@@ -3,7 +3,7 @@ version: 0.2
 env:
   variables:
     PACKAGE_PREFIX: "Packages/DeimosCore"
-    PACKAGE_BUCKET: "deimos-configmgmt"
+    KMS_S3KEY: "b9b0289a-a6e1-427c-9686-33472172bc33"
 
 phases:
   install:
@@ -16,7 +16,7 @@ phases:
   build: 
     commands:
       - echo Upload Target $PACKAGE_BUCKET to $PACKAGE_PREFIX
-      - aws cloudformation package --template-file cf-deimos.json --s3-bucket $PACKAGE_BUCKET --s3-prefix $PACKAGE_PREFIX --output-template-file cf-deimos-packed.json
+      - aws cloudformation package --template-file cf-deimos.json --s3-bucket $PACKAGE_BUCKET --s3-prefix $PACKAGE_PREFIX --kms-key-id $KMS_S3KEY --output-template-file cf-deimos-packed.json
 artifacts:
   secondary-artifacts:
     DeimosCloudFormation:
