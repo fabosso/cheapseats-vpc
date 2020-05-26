@@ -83,6 +83,26 @@
             "Resource": [
                 "*"
             ]
+        },
+        {
+            "Sid": "XonoticLambdaCreate",
+            "Effect": "Allow",
+            "Action": [
+                "lambda:CreateFunction",
+                "lambda:UpdateFunctionCode",
+                "lambda:AddPermission",
+                "lambda:GetFunction",
+                "lambda:UpdateFunctionConfiguration",
+                "lambda:GetFunctionConfiguration",
+                "lambda:DeleteFunction",
+                "lambda:PublishVersion",
+                "lambda:GetPolicy",
+                "lambda:RemovePermission",
+                "lambda:ListTags",
+                "lambda:TagResource",
+                "lambda:UntagResource"
+            ],
+            "Resource": "arn:aws:lambda:*:495602461790:function:*"
         }
     ]
 }
