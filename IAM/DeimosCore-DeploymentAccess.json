@@ -84,8 +84,21 @@
                 "*"
             ]
         },
+	{
+	    "Sid": "DeimosGetPackages",
+	    "Effect" : "Allow",
+	    "Action" : [
+	       "s3:GetObject",
+	       "s3:GetObjectVersion",
+	       "s3:ListBucket"
+	    ],
+	    "Resource" : [
+                "arn:aws:s3:::codepipeline-ap-southeast-2-810622726934",
+                "arn:aws:s3:::codepipeline-ap-southeast-2-810622726934/*"
+            ]
+	},
         {
-            "Sid": "XonoticLambdaCreate",
+            "Sid": "DeimosLambdaCreate",
             "Effect": "Allow",
             "Action": [
                 "lambda:CreateFunction",
