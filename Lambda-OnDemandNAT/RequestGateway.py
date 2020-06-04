@@ -57,10 +57,10 @@ def create_nat_gateway():
         {'Key' : 'OnDemandNAT', 'Value' : 'True'}
       , {'Key' : 'Name', 'Value' : 'OnDemandNAT-Gateway'}
       , {'Key' : 'LastRequested', 'Value' : '%s' % datetime.utcnow()}
-      , {'Key' : 'Project', 'Deimos-Infra'}
-      , {'Key' : 'UseCase', 'AWS-Admin'}
-      , {'Key' : 'Application', 'OnDemandNAT'}
-      , {'Key' : 'Environment', 'Infrastructure'}
+      , {'Key' : 'Project', 'Value' : 'Deimos-Infra'}
+      , {'Key' : 'UseCase', 'Value' : 'AWS-Admin'}
+      , {'Key' : 'Application', 'Value' : 'OnDemandNAT'}
+      , {'Key' : 'Environment', 'Value' : 'Infrastructure'}
       ]
     )
     return gatewayId
