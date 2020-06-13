@@ -20,8 +20,10 @@ def ec2_need_natgw():
     instances = ec2.describe_instances(Filters=filters)
     
     if (len(instances['Reservations']) > 0):
+        print("Checking if NAT Gateway is required - YES\n")
         return True
     else:
+        print("Checking if NAT Gateway is required - NO\n")
         return False
         
 def vpc_has_natgw():
@@ -34,8 +36,10 @@ def vpc_has_natgw():
     gateways = jmespath.search('NatGateways[*].[NatGatewayId, State, CreateTime, Tags[?Key==\'LastRequested\'].Value | [0]]', gateway_json)
     
     if len(gateways) > 0:
+        print("Checking for existing gateways, found ---\n%s\n---\n" % gateways)
         return gateways
     else:
+        print("Checking for existing gateways, found none\n")
         return None
     
 def create_nat_gateway():
@@ -49,7 +53,7 @@ def create_nat_gateway():
     new_gw_json = ec2.create_nat_gateway(AllocationId=allocId, SubnetId=subnetId)
     gatewayId = jmespath.search('NatGateway.NatGatewayId' , new_gw_json)
     
-    print('%s\n----ID: %s\n' % (new_gw_json, gatewayId))
+    print('NAT Gateway Created\n\tID: %s\tInfo ---\n%s\n---\n' % (gatewayId, new_gw_json))
     
     ec2.create_tags(
       Resources=[gatewayId]
@@ -69,11 +73,14 @@ def update_route_tables(gatewayId):
     routes_json = ec2.describe_route_tables(Filters=[{'Name' : 'tag:OnDemandNAT', 'Values' : ['Yes', 'True']}])
     routes_list = jmespath.search('RouteTables[*].RouteTableId', routes_json)
     
+    print("Fetched Routes List for update ---\n%s\n---\n", % routes_list)
+    
     # Wait for gateway to finish starting.
     waiter = ec2.get_waiter('nat_gateway_available')
     waiter.wait(NatGatewayIds = [gatewayId])
     
     for routeTableId in routes_list:
+        print("Updating Route Table %s" % routetableId)
         try:
             ec2.delete_route(RouteTableId = routeTableId, DestinationCidrBlock = '0.0.0.0/0')
         except ClientError as e:
@@ -81,6 +88,8 @@ def update_route_tables(gatewayId):
             if e.response['Error']['Code'] != 'InvalidRoute.NotFound':
                 raise e
         ec2.create_route(RouteTableId = routeTableId, DestinationCidrBlock = '0.0.0.0/0', NatGatewayId = gatewayId)
+        
+        print("Update Completed for %s\n" % routeTableId)
     
 def autolaunch_handler(event, context):
     
@@ -125,6 +134,7 @@ def autolaunch_handler(event, context):
 
     
 def request_gateway_handler(event, context):
+    print("NAT Gateway Requested\n")
     try:
         gateway_list = vpc_has_natgw()
     
@@ -133,10 +143,12 @@ def request_gateway_handler(event, context):
         }
     
         if gateway_list == None: #and nat_needed == True:
+            print("New Gateway Required, Launching\n")
             gatewayId = create_nat_gateway()
             update_route_tables(gatewayId)
             info['nat-launched'] = gatewayId
         else: 
+            print("NAT Gateway already provisioned - updating Last Requested Timestamp\n")
             info['nat-existing'] = True
             for (gatewayId, state, created, lastRequested) in gateway_list:
                 ec2.create_tags(
