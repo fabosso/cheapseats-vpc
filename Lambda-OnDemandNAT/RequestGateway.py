@@ -73,14 +73,14 @@ def update_route_tables(gatewayId):
     routes_json = ec2.describe_route_tables(Filters=[{'Name' : 'tag:OnDemandNAT', 'Values' : ['Yes', 'True']}])
     routes_list = jmespath.search('RouteTables[*].RouteTableId', routes_json)
     
-    print("Fetched Routes List for update ---\n%s\n---\n", % routes_list)
+    print("Fetched Routes List for update ---\n%s\n---\n" % routes_list)
     
     # Wait for gateway to finish starting.
     waiter = ec2.get_waiter('nat_gateway_available')
     waiter.wait(NatGatewayIds = [gatewayId])
     
     for routeTableId in routes_list:
-        print("Updating Route Table %s" % routetableId)
+        print("Updating Route Table %s" % routeTableId)
         try:
             ec2.delete_route(RouteTableId = routeTableId, DestinationCidrBlock = '0.0.0.0/0')
         except ClientError as e:
