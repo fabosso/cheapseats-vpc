@@ -191,6 +191,7 @@
        "Code" : "Lambda-OnDemandNAT/RequestGateway.py",
        "Handler" : "RequestGateway.request_gateway_handler",
        "Runtime" : "python3.6",
+       "Timeout" : 300,
        "Role"    : { "Fn::GetAtt" : [ "OnDemandNatLambdaRole", "Arn" ] }
        }
     }
