@@ -216,6 +216,48 @@
               "logs:TagLogGroup"
             ],
             "Resource" : "*"
+        },
+        {
+            "Sid": "XonoticCatalogCreate",
+            "Effect": "Allow",
+            "Action": [
+                "servicecatalog:CreatePortfolio",
+                "servicecatalog:CreateProduct",
+                "servicecatalog:CreateProvisioningArtifact",
+                "servicecatalog:UpdatePortfolio",
+                "servicecatalog:DeletePortfolio",
+                "servicecatalog:ListProvisioningArtifacts",
+                "servicecatalog:DeleteProduct",
+                "servicecatalog:DeleteProvisioningArtifact",
+                "servicecatalog:CreateConstraint",
+                "servicecatalog:DescribePortfolio",
+                "servicecatalog:DescribeProduct",
+                "servicecatalog:UpdateProduct",
+                "servicecatalog:DescribeProvisioningArtifact",
+                "servicecatalog:ListPortfoliosForProduct",
+                "servicecatalog:UpdateProvisioningArtifact",
+                "servicecatalog:AssociateTagOptionWithResource"
+            ],
+            "Resource": [
+                "arn:aws:catalog:*:*:product/*",
+                "arn:aws:catalog:*:*:portfolio/*"
+            ]
+        },
+        {
+            "Sid": "XonoticCatalogCreate2",
+            "Effect": "Allow",
+            "Action": [
+                "servicecatalog:ListPortfolios",
+                "servicecatalog:CreateTagOption",
+                "servicecatalog:ListTagOptions",
+                "servicecatalog:AssociateProductWithPortfolio",
+                "servicecatalog:SearchProducts",
+                "servicecatalog:UpdateConstraint",
+                "servicecatalog:DeleteConstraint",
+                "servicecatalog:UpdateTagOption",
+                "servicecatalog:DeleteTagOption"
+            ],
+            "Resource": "*"
         }
     ]
 }
