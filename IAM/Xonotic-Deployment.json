@@ -236,17 +236,7 @@
                 "servicecatalog:DescribeProvisioningArtifact",
                 "servicecatalog:ListPortfoliosForProduct",
                 "servicecatalog:UpdateProvisioningArtifact",
-                "servicecatalog:AssociateTagOptionWithResource"
-            ],
-            "Resource": [
-                "arn:aws:catalog:*:*:product/*",
-                "arn:aws:catalog:*:*:portfolio/*"
-            ]
-        },
-        {
-            "Sid": "XonoticCatalogCreate2",
-            "Effect": "Allow",
-            "Action": [
+                "servicecatalog:AssociateTagOptionWithResource",
                 "servicecatalog:ListPortfolios",
                 "servicecatalog:CreateTagOption",
                 "servicecatalog:ListTagOptions",
