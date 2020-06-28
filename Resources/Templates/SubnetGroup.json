@@ -8,6 +8,11 @@
       "Type" : "String",
       "Description" : "Name used for this subnet group"
     },
+    "VPCName" : {
+      "Type" : "String" ,
+      "Description" : "Environment Name for VPC and Supporting Infrastructure",
+      "Default" : "Deimos"
+    },
     "CidrRange" : {
       "Type" : "String",
       "Description" : "CIDR Range for these subnets"
@@ -36,8 +41,9 @@
         "CidrBlock" : { "Fn::Select" : [ 0,  { "Fn::Cidr" : [ { "Ref" : "CidrRange" }, 3, { "Ref" : "MaskSize" } ] } ] },
         "AvailabilityZone" : { "Fn::Select" : [ 0 , { "Fn::GetAZs" : { "Ref" : "AWS::Region" } } ] },
         "Tags" : [
-          { "Key" : "Name", "Value" : { "Fn::Sub" : "${SubnetGroupName}-A" } },
-          { "Key" : "SubnetGroup", "Value" : { "Ref" : "SubnetGroupName" } }
+          { "Key" : "Name", "Value" : { "Fn::Sub" : "${VPCName}-${SubnetGroupName}-A" } },
+          { "Key" : "SubnetGroup", "Value" : { "Ref" : "SubnetGroupName" } },
+          { "Key" : "VPC", "Value" : { "Ref" : "VPCName" } }
         ]
       }
     },
@@ -57,8 +63,9 @@
         "CidrBlock" : { "Fn::Select" : [ 1,  { "Fn::Cidr" : [ { "Ref" : "CidrRange" }, 3, { "Ref" : "MaskSize" } ] } ] },
         "AvailabilityZone" : { "Fn::Select" : [ 1 , { "Fn::GetAZs" : { "Ref" : "AWS::Region" } } ] },
         "Tags" : [
-          { "Key" : "Name", "Value" : { "Fn::Sub" : "${SubnetGroupName}-B" } },
-          { "Key" : "SubnetGroup", "Value" : { "Ref" : "SubnetGroupName" } }
+          { "Key" : "Name", "Value" : { "Fn::Sub" : "${VPCName}-${SubnetGroupName}-B" } },
+          { "Key" : "SubnetGroup", "Value" : { "Ref" : "SubnetGroupName" } },
+          { "Key" : "VPC", "Value" : { "Ref" : "VPCName" } }
         ]
       }
     },
@@ -78,8 +85,9 @@
         "CidrBlock" : { "Fn::Select" : [ 2,  { "Fn::Cidr" : [ { "Ref" : "CidrRange" }, 3, { "Ref" : "MaskSize" } ] } ] },
         "AvailabilityZone" : { "Fn::Select" : [ 2 , { "Fn::GetAZs" : { "Ref" : "AWS::Region" } } ] },
         "Tags" : [
-          { "Key" : "Name", "Value" : { "Fn::Sub" : "${SubnetGroupName}-C" } },
-          { "Key" : "SubnetGroup", "Value" : { "Ref" : "SubnetGroupName" } }
+          { "Key" : "Name", "Value" : { "Fn::Sub" : "${VPCName}-${SubnetGroupName}-C" } },
+          { "Key" : "SubnetGroup", "Value" : { "Ref" : "SubnetGroupName" } },
+          { "Key" : "VPC", "Value" : { "Ref" : "VPCName" } }
         ]
       }
     },
@@ -95,7 +103,7 @@
     "CidrParameters" : {
       "Type" : "AWS::SSM::Parameter",
       "Properties" : {
-        "Name" : { "Fn::Sub" : "/Deimos/Subnets/${SubnetGroupName}-CIDR" },
+        "Name" : { "Fn::Sub" : "/${VPCName}/Subnets/${SubnetGroupName}-CIDR" },
         "Type" : "String",
         "Value" : { "Ref" : "CidrRange" }
       }
@@ -104,7 +112,7 @@
     "SubnetParameters" : {
       "Type" : "AWS::SSM::Parameter",
       "Properties" : {
-        "Name" : { "Fn::Sub" : "/Deimos/Subnets/${SubnetGroupName}" },
+        "Name" : { "Fn::Sub" : "/${VPCName}/Subnets/${SubnetGroupName}" },
         "Type" : "StringList",
         "Value" : { "Fn::Join" : [ ",", [ 
           { "Ref" : "SubnetA" }
@@ -124,7 +132,7 @@
       , { "Ref" : "SubnetC" }
       ] ] },
       "Export" : { 
-        "Name" : { "Fn::Sub" : "${SubnetGroupName}-Subnets" }
+        "Name" : { "Fn::Sub" : "${VPCName}-${SubnetGroupName}-Subnets" }
       }
     },
 
@@ -132,7 +140,7 @@
       "Description" : "CIDR Range of the Entire Subnet Group",
       "Value" : { "Ref" : "CidrRange" },
       "Export" : { 
-        "Name" : { "Fn::Sub" : "${SubnetGroupName}-CIDR" }
+        "Name" : { "Fn::Sub" : "${VPCName}-${SubnetGroupName}-CIDR" }
       }
     }
   }

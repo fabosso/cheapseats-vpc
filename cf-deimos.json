@@ -65,6 +65,7 @@
           "SubnetGroupName" : "Public",
           "CidrRange" : { "Fn::Select" : [ 0,  { "Fn::Cidr" : [ { "Ref" : "AwsCIDRRange" }, 2, 14 ] } ] },
           "VpcId" : { "Ref" : "Vpc" },
+          "VPCName" : { "Ref" : "VPCName" },
           "MaskSize" : 8,
           "RouteTable" : { "Ref" : "PublicRouteTable" }
         },
@@ -103,6 +104,7 @@
           "SubnetGroupName" : "Private",
           "CidrRange" : { "Fn::Select" : [ 1,  { "Fn::Cidr" : [ { "Ref" : "AwsCIDRRange" }, 2, 14 ] } ] },
           "VpcId" : { "Ref" : "Vpc" },
+          "VPCName" : { "Ref" : "VPCName" },
           "MaskSize" : 8,
           "RouteTable" : { "Ref" : "PrivateRouteTable" }
         },
