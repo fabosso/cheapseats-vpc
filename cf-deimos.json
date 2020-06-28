@@ -25,7 +25,7 @@
   },
   
   "Resources" : {
-    "DeimosVpc" : {
+    "Vpc" : {
       "Type" : "AWS::EC2::VPC",
       "Properties" : {
         "CidrBlock" : { "Ref" : "AwsCIDRRange" },
@@ -43,7 +43,7 @@
     "IgwAttachment" : {
       "Type" : "AWS::EC2::VPCGatewayAttachment",
       "Properties" : {
-        "VpcId" : { "Ref" : "DeimosVpc" },
+        "VpcId" : { "Ref" : "Vpc" },
         "InternetGatewayId" : { "Ref" : "InternetGateway" }
       }
     },
@@ -51,7 +51,7 @@
     "PublicRouteTable" : {
       "Type" : "AWS::EC2::RouteTable",
       "Properties" : {
-        "VpcId" : { "Ref" : "DeimosVpc" },
+        "VpcId" : { "Ref" : "Vpc" },
         "Tags" : [
           { "Key" : "Name", "Value" : "PublicRouteTable" }
         ]       
@@ -64,7 +64,7 @@
         "Parameters" : {
           "SubnetGroupName" : "Public",
           "CidrRange" : { "Fn::Select" : [ 0,  { "Fn::Cidr" : [ { "Ref" : "AwsCIDRRange" }, 2, 14 ] } ] },
-          "VpcId" : { "Ref" : "DeimosVpc" },
+          "VpcId" : { "Ref" : "Vpc" },
           "MaskSize" : 8,
           "RouteTable" : { "Ref" : "PublicRouteTable" }
         },
@@ -88,7 +88,7 @@
     "PrivateRouteTable" : {
       "Type" : "AWS::EC2::RouteTable",
       "Properties" : {
-        "VpcId" : { "Ref" : "DeimosVpc" },
+        "VpcId" : { "Ref" : "Vpc" },
         "Tags" : [
           { "Key" : "Name", "Value" : "PrivateRouteTable" },
           { "Key" : "OnDemandNAT", "Value" : "True" }
@@ -102,7 +102,7 @@
         "Parameters" : {
           "SubnetGroupName" : "Private",
           "CidrRange" : { "Fn::Select" : [ 1,  { "Fn::Cidr" : [ { "Ref" : "AwsCIDRRange" }, 2, 14 ] } ] },
-          "VpcId" : { "Ref" : "DeimosVpc" },
+          "VpcId" : { "Ref" : "Vpc" },
           "MaskSize" : 8,
           "RouteTable" : { "Ref" : "PrivateRouteTable" }
         },
@@ -203,9 +203,9 @@
   },
   
   "Outputs" : {
-    "DeimosVpcId" : {
+    "VpcId" : {
       "Description" : "VPC ID of VPC",
-      "Value" : { "Ref" : "DeimosVpc" },
+      "Value" : { "Ref" : "Vpc" },
       "Export" : {
         "Name" : { "Fn::Sub" : "${VPCName}-VPCID" }
       }
