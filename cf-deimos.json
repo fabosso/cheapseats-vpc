@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
 
-  "Description" : "Core Deimos VPC and IAM Infrastructure",
+  "Description" : "Core VPC and IAM Infrastructure",
   
   "Parameters" : {
     "AwsCIDRRange" : {
@@ -14,8 +14,13 @@
     },
     "ConfigBucket" : {
        "Type" : "AWS::SSM::Parameter::Value<String>",
-       "Description" : "Deimos Configuration Bucket",
+       "Description" : "S3 Bucket for Configuration Artifacts & Templates",
        "Default" : "/Deimos/ConfigBucket"
+    },
+    "VPCName" : {
+      "Type" : "String" ,
+      "Description" : "Environment Name for VPC and Supporting Infrastructure",
+      "Default" : "Deimos"
     }
   },
   
@@ -186,7 +191,7 @@
     "OnDemandRequestNatLambda" : {
       "Type" : "AWS::Lambda::Function",
       "Properties" : {
-       "FunctionName" : "Deimos-RequestNATGateway",
+       "FunctionName" : { "Fn::Sub" : "${VPCName}-RequestNATGateway" },
        "Description" : "Request a NAT Gateway (Provisioning one if it isn't already available)",
        "Code" : "Lambda-OnDemandNAT/RequestGateway.py",
        "Handler" : "RequestGateway.request_gateway_handler",
@@ -199,10 +204,10 @@
   
   "Outputs" : {
     "DeimosVpcId" : {
-      "Description" : "VPC ID of Deimos VPC",
+      "Description" : "VPC ID of VPC",
       "Value" : { "Ref" : "DeimosVpc" },
       "Export" : {
-        "Name" : "Deimos-VPCID"
+        "Name" : { "Fn::Sub" : "${VPCName}-VPCID" }
       }
     }
   }
