@@ -13,10 +13,15 @@ phases:
 
       # Upgrade AWS CLI to the latest version
       - pip install --upgrade awscli
+  pre_build:
+    commands:
+      - echo --- Validating Cloudformation Templates ---
+      - aws cloudformation validate-template --template-body file://cf-deimos.json
   build: 
     commands:
       - echo Upload Target $PACKAGE_BUCKET to $PACKAGE_PREFIX
       - aws cloudformation package --template-file cf-deimos.json --s3-bucket $PACKAGE_BUCKET --s3-prefix $PACKAGE_PREFIX --kms-key-id $KMS_S3KEY --output-template-file cf-deimos-packed.json
+      - aws cloudformation validate-template --template-body file://cf-deimos-packed.json
 artifacts:
   secondary-artifacts:
     DeimosCloudFormation:
