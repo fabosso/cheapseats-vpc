@@ -25,7 +25,7 @@
   },
   
   "Resources" : {
-    "Vpc" : {
+    "DeimosVpc" : {
       "Type" : "AWS::EC2::VPC",
       "Properties" : {
         "CidrBlock" : { "Ref" : "AwsCIDRRange" },
@@ -43,7 +43,7 @@
     "IgwAttachment" : {
       "Type" : "AWS::EC2::VPCGatewayAttachment",
       "Properties" : {
-        "VpcId" : { "Ref" : "Vpc" },
+        "VpcId" : { "Ref" : "DeimosVpc" },
         "InternetGatewayId" : { "Ref" : "InternetGateway" }
       }
     },
@@ -51,7 +51,7 @@
     "PublicRouteTable" : {
       "Type" : "AWS::EC2::RouteTable",
       "Properties" : {
-        "VpcId" : { "Ref" : "Vpc" },
+        "VpcId" : { "Ref" : "DeimosVpc" },
         "Tags" : [
           { "Key" : "Name", "Value" : "PublicRouteTable" }
         ]       
@@ -64,7 +64,7 @@
         "Parameters" : {
           "SubnetGroupName" : "Public",
           "CidrRange" : { "Fn::Select" : [ 0,  { "Fn::Cidr" : [ { "Ref" : "AwsCIDRRange" }, 2, 14 ] } ] },
-          "VpcId" : { "Ref" : "Vpc" },
+          "VpcId" : { "Ref" : "DeimosVpc" },
           "VPCName" : { "Ref" : "VPCName" },
           "MaskSize" : 8,
           "RouteTable" : { "Ref" : "PublicRouteTable" }
@@ -89,7 +89,7 @@
     "PrivateRouteTable" : {
       "Type" : "AWS::EC2::RouteTable",
       "Properties" : {
-        "VpcId" : { "Ref" : "Vpc" },
+        "VpcId" : { "Ref" : "DeimosVpc" },
         "Tags" : [
           { "Key" : "Name", "Value" : "PrivateRouteTable" },
           { "Key" : "OnDemandNAT", "Value" : "True" }
@@ -103,7 +103,7 @@
         "Parameters" : {
           "SubnetGroupName" : "Private",
           "CidrRange" : { "Fn::Select" : [ 1,  { "Fn::Cidr" : [ { "Ref" : "AwsCIDRRange" }, 2, 14 ] } ] },
-          "VpcId" : { "Ref" : "Vpc" },
+          "VpcId" : { "Ref" : "DeimosVpc" },
           "VPCName" : { "Ref" : "VPCName" },
           "MaskSize" : 8,
           "RouteTable" : { "Ref" : "PrivateRouteTable" }
@@ -207,7 +207,7 @@
   "Outputs" : {
     "VpcId" : {
       "Description" : "VPC ID of VPC",
-      "Value" : { "Ref" : "Vpc" },
+      "Value" : { "Ref" : "DeimosVpc" },
       "Export" : {
         "Name" : { "Fn::Sub" : "${VPCName}-VPCID" }
       }
