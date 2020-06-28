@@ -232,6 +232,7 @@
                 "servicecatalog:CreateConstraint",
                 "servicecatalog:DescribePortfolio",
                 "servicecatalog:DescribeProduct",
+                "servicecatalog:DescribeProductAsAdmin",
                 "servicecatalog:UpdateProduct",
                 "servicecatalog:DescribeProvisioningArtifact",
                 "servicecatalog:ListPortfoliosForProduct",
