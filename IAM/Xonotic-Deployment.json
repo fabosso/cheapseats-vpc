@@ -253,7 +253,8 @@
                 "servicecatalog:DeleteConstraint",
                 "servicecatalog:UpdateTagOption",
                 "servicecatalog:DeleteTagOption",
-                "servicecatalog:ListConstraintsForPortfolio"
+                "servicecatalog:ListConstraintsForPortfolio",
+                "servicecatalog:DisassociateProductFromPortfolio"
             ],
             "Resource": "*"
         }
