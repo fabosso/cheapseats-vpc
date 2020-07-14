@@ -193,7 +193,7 @@
     "OnDemandRequestNatLambda" : {
       "Type" : "AWS::Lambda::Function",
       "Properties" : {
-       "FunctionName" : { "Fn::Sub" : "${VPCName}-RequestNATGateway" },
+       "FunctionName" : { "Fn::Sub" : "${DeimosVPC}-RequestNATGateway" },
        "Description" : "Request a NAT Gateway (Provisioning one if it isn't already available)",
        "Code" : "Lambda-OnDemandNAT/RequestGateway.py",
        "Handler" : "RequestGateway.request_gateway_handler",
@@ -209,7 +209,7 @@
       "Description" : "VPC ID of VPC",
       "Value" : { "Ref" : "DeimosVpc" },
       "Export" : {
-        "Name" : { "Fn::Sub" : "${VPCName}-VPCID" }
+        "Name" : { "Fn::Sub" : "${DeimosVPC}-VPCID" }
       }
     }
   }
