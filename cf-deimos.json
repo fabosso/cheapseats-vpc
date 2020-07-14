@@ -201,6 +201,19 @@
        "Timeout" : 300,
        "Role"    : { "Fn::GetAtt" : [ "OnDemandNatLambdaRole", "Arn" ] }
        }
+    },
+
+    "OnDemandMonitorLambda" : {
+      "Type" : "AWS::Lambda::Function",
+      "Properties" : {
+       "FunctionName" : { "Fn::Sub" : "${VPCName}-CheckGatewayRequired" },
+       "Description" : "Checks if an Operational NAT Gateway is still required and terminates if not",
+       "Code" : "Lambda-OnDemandNAT/RequestGateway.py",
+       "Handler" : "RequestGateway.check_gateway_required",
+       "Runtime" : "python3.6",
+       "Timeout" : 300,
+       "Role"    : { "Fn::GetAtt" : [ "OnDemandNatLambdaRole", "Arn" ] }
+       }
     }
   },
   
