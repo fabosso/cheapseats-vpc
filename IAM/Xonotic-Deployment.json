@@ -183,7 +183,6 @@
                 "iam:Untag*"
             ],
             "Resource": [
-                "arn:aws:iam::495602461790:role/xonotic-server*",
                 "arn:aws:iam::495602461790:role/xonotic/*",
                 "arn:aws:iam::495602461790:policy/xonotic-server*",
                 "arn:aws:iam::495602461790:group/xonotic/*"
@@ -252,7 +251,8 @@
                 "servicecatalog:UpdateTagOption",
                 "servicecatalog:DeleteTagOption",
                 "servicecatalog:ListConstraintsForPortfolio",
-                "servicecatalog:DisassociateProductFromPortfolio"
+                "servicecatalog:DisassociateProductFromPortfolio",
+                "servicecatalog:AssociatePrincipalWithPortfolio"
             ],
             "Resource": "*"
         }
