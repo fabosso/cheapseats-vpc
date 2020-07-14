@@ -187,7 +187,19 @@
                 "iam:GetRolePolicy",
                 "iam:ListRoleTags",
                 "iam:TagRole",
-                "iam:UntagRole"
+                "iam:UntagRole",
+                "iam:CreateGroup",
+                "iam:GetGroup",
+                "iam:UpdateGroup",
+                "iam:ListGroups",
+                "iam:DeleteGroup",
+                "iam:AttachGroupPolicy",              
+                "iam:GetGroupPolicy",
+                "iam:PutGroupPolicy",                  
+                "iam:DetachGroupPolicy",
+                "iam:DeleteGroupPolicy",
+                "iam:ListGroupPolicies",
+                "iam:ListAttachedGroupPolicies"
             ],
             "Resource": [
                 "arn:aws:iam::495602461790:role/xonotic-server*",
