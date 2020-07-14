@@ -230,6 +230,16 @@
           }
         ]
       }
+    },
+    
+    "OnDemandMonitorPermissions" : {
+      "Type": "AWS::Lambda::Permission",
+        "Properties": {
+          "FunctionName": { "Ref": "OnDemandMonitorLambda" },
+          "Action": "lambda:InvokeFunction",
+          "Principal": "events.amazonaws.com",
+          "SourceArn": { "Fn::GetAtt": ["OnDemandMonitorTrigger", "Arn"] }
+        }
     }
   },
   
