@@ -214,6 +214,22 @@
        "Timeout" : 300,
        "Role"    : { "Fn::GetAtt" : [ "OnDemandNatLambdaRole", "Arn" ] }
        }
+    },
+    
+    "OnDemandMonitorTrigger" : {
+      "Type" : "AWS::Events::Rule",
+      "Properties" : {
+        "Name" : { "Fn::Sub" : "${VPCName}-CheckGatewayTrigger" },
+        "Description" : "Twice hourly check to determine if the NAT Gateway is still required",
+        "ScheduleExpression" : "rate(30 minutes)",
+        "State" : "ENABLED",
+        "Targets" : [
+          {
+            "Arn": { "Fn::GetAtt": ["OnDemandMonitorLambda", "Arn"] },
+            "Id": { "Fn::Sub" : "${VPCName}-CheckGatewayRequired" }
+          }
+        ]
+      }
     }
   },
   
