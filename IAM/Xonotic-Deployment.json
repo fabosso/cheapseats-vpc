@@ -172,40 +172,34 @@
             "Sid": "XonoticIAMCreate",
             "Effect": "Allow",
             "Action": [
-                "iam:GetRole",
-                "iam:UpdateAssumeRolePolicy",
+                "iam:Create*",
+                "iam:Put*",
+                "iam:Update*",
+                "iam:Delete*",
                 "iam:PassRole",
-                "iam:GetPolicy",
-                "iam:GetRole",
-                "iam:DeleteRolePolicy",
-                "iam:DeletePolicy",
-                "iam:CreateRole",
-                "iam:DeleteRole",
-                "iam:AttachRolePolicy",
-                "iam:UpdateRole",
-                "iam:PutRolePolicy",
-                "iam:GetRolePolicy",
-                "iam:ListRoleTags",
-                "iam:TagRole",
-                "iam:UntagRole",
-                "iam:CreateGroup",
-                "iam:GetGroup",
-                "iam:UpdateGroup",
-                "iam:ListGroups",
-                "iam:DeleteGroup",
-                "iam:AttachGroupPolicy",              
-                "iam:GetGroupPolicy",
-                "iam:PutGroupPolicy",                  
-                "iam:DetachGroupPolicy",
-                "iam:DeleteGroupPolicy",
-                "iam:ListGroupPolicies",
-                "iam:ListAttachedGroupPolicies"
+                "iam:Attach*",
+                "iam:Detach*",
+                "iam:Tag*",
+                "iam:Untag*"
             ],
             "Resource": [
                 "arn:aws:iam::495602461790:role/xonotic-server*",
                 "arn:aws:iam::495602461790:role/xonotic/*",
+                "arn:aws:iam::495602461790:policy/xonotic-server*",
+                "arn:aws:iam::495602461790:group/xonotic/*"
+            ]
+        },
+        {
+            "Sid": "XonoticIAMInspect",
+            "Effect": "Allow",
+            "Action": [
+                "iam:Get*",
+                "iam:List*"
+            ],
+            "Resource": [
                 "arn:aws:iam::495602461790:role/*",
-                "arn:aws:iam::495602461790:policy/xonotic-server*"
+                "arn:aws:iam::495602461790:policy/*",                
+                "arn:aws:iam::495602461790:group/*"
             ]
         },
         {
