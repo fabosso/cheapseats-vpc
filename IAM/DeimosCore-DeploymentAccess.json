@@ -32,7 +32,7 @@
                 "ec2:StartInstances",
                 "ec2:DeleteSecurityGroup",
                 "ec2:AssociateSubnetCidrBlock",
-		"ec2:AllocateAddress",
+                "ec2:AllocateAddress",
                 "ec2:CreateTags",
                 "ec2:DeleteTags"
             ],
@@ -97,25 +97,35 @@
                 "arn:aws:s3:::codepipeline-ap-southeast-2-810622726934/*"
             ]
 	},
-        {
-            "Sid": "DeimosLambdaCreate",
-            "Effect": "Allow",
-            "Action": [
-                "lambda:CreateFunction",
-                "lambda:UpdateFunctionCode",
-                "lambda:AddPermission",
-                "lambda:GetFunction",
-                "lambda:UpdateFunctionConfiguration",
-                "lambda:GetFunctionConfiguration",
-                "lambda:DeleteFunction",
-                "lambda:PublishVersion",
-                "lambda:GetPolicy",
-                "lambda:RemovePermission",
-                "lambda:ListTags",
-                "lambda:TagResource",
-                "lambda:UntagResource"
-            ],
-            "Resource": "arn:aws:lambda:*:495602461790:function:*"
-        }
+    {
+        "Sid": "DeimosLambdaCreate",
+        "Effect": "Allow",
+        "Action": [
+            "lambda:CreateFunction",
+            "lambda:UpdateFunctionCode",
+            "lambda:AddPermission",
+            "lambda:GetFunction",
+            "lambda:UpdateFunctionConfiguration",
+            "lambda:GetFunctionConfiguration",
+            "lambda:DeleteFunction",
+            "lambda:PublishVersion",
+            "lambda:GetPolicy",
+            "lambda:RemovePermission",
+            "lambda:ListTags",
+            "lambda:TagResource",
+            "lambda:UntagResource"
+        ],
+        "Resource": "arn:aws:lambda:*:495602461790:function:*"
+    },
+    {
+        "Sid": "DeimosEventCreate",
+        "Effect": "Allow",
+        "Action" : [
+            "events:*Rule",
+            "events:Tag*",
+            "events:Untag*"
+        ],
+        "Resource" : "*"
+    }
     ]
 }
