@@ -179,3 +179,46 @@ def request_gateway_handler(event, context):
               }
             )
         raise e
+
+def check_gateway_required(event, context):
+    nat_needed = ec2_need_natgw()
+    gateway_list = vpc_has_natgw()
+    
+    info = {
+        'nat_needed' : nat_needed
+    }
+    
+    if gateway_list == None:
+        # Nothing to do.
+        print("No Gateway running, nothing to do")
+        return
+
+    if nat_needed == True:
+        print("Gateway still in use - updating last-requested details")
+        
+        for (gatewayId, state, created, lastRequested) in gateway_list:
+            ec2.create_tags(
+              Resources=[gatewayId]
+            , Tags=[ {'Key' : 'LastRequested', 'Value' : '%s' % datetime.utcnow() } ]
+           )
+    elif nat_needed == False:
+        gw_change_list = []
+        
+        print("No gateway user detected, checking gateway ages")
+        for (gatewayId, state, created, lastRequested) in  gateway_list:
+            age = datetime.now(created.tzinfo) - created
+            
+            if lastRequested != None:
+                inactive = datetime.utcnow() - parser.isoparse(lastRequested)
+            else:
+                inactive = age
+            
+            if inactive >= timedelta(minutes=45):
+                ec2.delete_nat_gateway(NatGatewayId = gatewayId)
+                gw_change_list.append({'action' : 'deleted', 'gatewayId' : gatewayId, 'age' : ('%s' % age), 'inactive' : ('%s' % inactive)})
+            else:
+                gw_change_list.append({'action' : 'skipped', 'gatewayId' : gatewayId, 'age' : ('%s' % age), 'inactive' : ('%s' % inactive)})
+        info['nat-changed'] = gw_change_list
+        
+    print("SUMMARY:\n%s\n" % json.dumps(info))
+    return info
