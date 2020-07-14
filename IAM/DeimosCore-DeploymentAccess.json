@@ -122,6 +122,7 @@
         "Effect": "Allow",
         "Action" : [
             "events:*Rule",
+            "events:*Targets",
             "events:Tag*",
             "events:Untag*"
         ],
