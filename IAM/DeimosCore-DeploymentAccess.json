@@ -6,6 +6,7 @@
             "Effect": "Allow",
             "Action": [
               "ec2:*",
+              "autoscaling:*",
               "ssm:GetParameters",
               "ssm:GetParameter",
               "sns:*Topic",     
