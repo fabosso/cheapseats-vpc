@@ -8,9 +8,13 @@
               "ec2:*",
               "ssm:GetParameters",
               "ssm:GetParameter",
-              "sns:*Topic",
+              "sns:*Topic",     
               "sns:Get*",
-              "sns:List*"
+              "sns:List*",                       
+              "sns:TagResource",
+              "sns:UntagResource",   
+              "sns:Subscribe",
+              "sns:Unsubscribe"
             ],
             "Resource": "*"
         },
