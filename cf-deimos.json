@@ -236,12 +236,23 @@
     
     "OnDemandMonitorPermissions" : {
       "Type": "AWS::Lambda::Permission",
-        "Properties": {
-          "FunctionName": { "Ref": "OnDemandMonitorLambda" },
-          "Action": "lambda:InvokeFunction",
-          "Principal": "events.amazonaws.com",
-          "SourceArn": { "Fn::GetAtt": ["OnDemandMonitorTrigger", "Arn"] }
-        }
+      "Properties": {
+        "FunctionName": { "Ref": "OnDemandMonitorLambda" },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "events.amazonaws.com",
+        "SourceArn": { "Fn::GetAtt": ["OnDemandMonitorTrigger", "Arn"] }
+      }
+    },
+    
+    "VPNService" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "Parameters" : {
+          "VPCName" : { "Ref" : "VPCName" },
+          "VpnCIDRRange" : { "Ref" : "VpnCIDRRange" }
+        },
+        "TemplateURL" : { "Fn::Sub" : "https://${ConfigBucket}.s3.${AWS::Region}.amazonaws.com/Resources/DeimosVPN.json"}
+      }
     }
   },
   
