@@ -35,7 +35,7 @@
           "InstanceType" : "t3.nano",
           "BlockDeviceMappings" : [ 
             { 
-              "DeviceName" : "/dev/sda",
+              "DeviceName" : "/dev/xvda",
               "Ebs" : {
                 "VolumeSize" : 20,
                 "VolumeType" : "gp2"
