@@ -20,7 +20,8 @@
     },  
     "VpcId" : {
       "Type" : "String",
-      "Description" : "VPC ID of VPC"
+      "Description" : "VPC ID of VPC",
+      "Default" : "vpc-09731938fa88bc566"
     },
     "BaseAMI" : {
       "Type" : "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
@@ -71,7 +72,7 @@
             }
           ],
           "KeyName" : "Deimos-Administration",
-          "TagSpecification" : {
+          "TagSpecifications" : {
             "Tag" : [
               { "Key" : "Name", "Value" : "VPNHost" }
             ]
