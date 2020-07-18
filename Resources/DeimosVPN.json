@@ -67,16 +67,18 @@
           ],
           "NetworkInterfaces" : [
             {
-              "AssociatePublicIpAddress" : "Yes",
+              "AssociatePublicIpAddress" : "true",
               "Groups" : [ { "Ref" : "VPNServerSecurityGroup" } ]
             }
           ],
           "KeyName" : "Deimos-Administration",
-          "TagSpecifications" : {
-            "Tag" : [
-              { "Key" : "Name", "Value" : "VPNHost" }
-            ]
-          }
+          "TagSpecifications" : [
+            { 
+              "Tags" : [
+                { "Key" : "Name", "Value" : "VPNHost" }
+              ] 
+            }
+          ]
         }
       }
     },
