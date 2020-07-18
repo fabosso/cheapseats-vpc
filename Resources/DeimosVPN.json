@@ -7,7 +7,7 @@
     "VpnCIDRRange" : {
       "Type" : "String",
       "Description" : "CIDR Range for Incoming VPN Connectivity"
-    },
+    }, 
     "ConfigBucket" : {
        "Type" : "AWS::SSM::Parameter::Value<String>",
        "Description" : "S3 Bucket for Configuration Artifacts & Templates",
@@ -17,15 +17,34 @@
       "Type" : "String" ,
       "Description" : "Environment Name for VPC and Supporting Infrastructure",
       "Default" : "Deimos"
+    },  
+    "VpcId" : {
+      "Type" : "String",
+      "Description" : "VPC ID of VPC"
     },
     "BaseAMI" : {
-      "Type" : "'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'",
+      "Type" : "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
       "Description" : "Base AMI for VPN Server Instance",
       "Default" : "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
     }
   },
   
   "Resources" : {
+    "VPNServerSecurityGroup" : {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "Security Group for VPN Hosts",
+        "GroupName" :  { "Fn::Sub" : "${VPCName}-VPN-SecurityGroup" },
+        "SecurityGroupIngress" : [ {
+          "IpProtocol" : "tcp",
+          "FromPort" : 22,
+          "ToPort" : 22,
+          "CidrIp" : "0.0.0.0/0"
+         } ],
+        "VpcId" : { "Ref" : "VpcId" }
+      }
+    },
+  
     "VPNServerLaunchTemplate" : {
       "Type" : "AWS::EC2::LaunchTemplate",
       "Properties" : {
@@ -42,10 +61,16 @@
               }
             }
           ],
-          "KeyName" : "Deimos-Administration"
+          "KeyName" : "Deimos-Administration",
+          "TagSpecification" : {
+            "Tag" : [
+              { "Key" : "Name", "Value" : "VPNHost" }
+            ]
+          }
         }
       }
     },
+    
     "AutoScalingGroup" : {
       "Type" : "AWS::AutoScaling::AutoScalingGroup",
         "Properties" : {
