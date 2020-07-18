@@ -1,0 +1,64 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+
+  "Description" : "Core VPC and IAM Infrastructure",
+  
+  "Parameters" : {
+    "VpnCIDRRange" : {
+      "Type" : "String",
+      "Description" : "CIDR Range for Incoming VPN Connectivity"
+    },
+    "ConfigBucket" : {
+       "Type" : "AWS::SSM::Parameter::Value<String>",
+       "Description" : "S3 Bucket for Configuration Artifacts & Templates",
+       "Default" : "/Deimos/ConfigBucket"
+    },
+    "VPCName" : {
+      "Type" : "String" ,
+      "Description" : "Environment Name for VPC and Supporting Infrastructure",
+      "Default" : "Deimos"
+    },
+    "BaseAMI" : {
+      "Type" : "AWS::EC2::Image::Id",
+      "Description" : "Base AMI for VPN Server Instance",
+      "Default" : "ami-0a58e22c727337c51"
+    }
+  },
+  
+  "Resources" : {
+    "VPNServerLaunchTemplate" : {
+      "Type" : "AWS::EC2::LaunchTemplate",
+      "Properties" : {
+        "LaunchTemplateName" : { "Fn::Sub" : "${VPCName}-VPN-LaunchTemplate" },
+        "LaunchTemplateData" : {
+          "ImageID" : { "Ref" : "BaseAMI" },
+          "InstanceType" : "t3.nano",
+          "BlockDeviceMappings" : [ 
+            { 
+              "DeviceName" : "/dev/sda",
+              "Ebs" : {
+                "VolumeSize" : 20,
+                "VolumeType" : "gp2"
+              }
+            }
+          ],
+          "Key" : "Deimos-Administration"
+        }
+    },
+    "AutoScalingGroup" : {
+      "Type" : "AWS::AutoScaling::AutoScalingGroup",
+        "Properties" : {
+          "AutoScalingGroupName" : { "Fn::Sub" : "${VPCName}-VPN" },
+          "VPCZoneIdentifier" : { "Fn::Split" : [ { "Fn::ImportValue" : { "Fn::Sub" : "${VPCName}-Public-Subnets" } }, "," ] },
+          "MinSize" : 0,
+          "MaxSize" : 1,
+          "DesiredCapacity" : 0,
+          "HealthCheckGracePeriod" : 300,
+          "LaunchTemplate" : {
+            "LaunchTemplateId" : { "Ref":"VPNServerLaunchTemplate" },
+            "Version" : { "Fn::GetAtt" : [ "VPNServerLaunchTemplate", "LatestVersionNumber" ] }
+          }          
+        }
+    }
+  }
+}
