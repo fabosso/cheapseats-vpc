@@ -74,6 +74,7 @@
           "KeyName" : "Deimos-Administration",
           "TagSpecifications" : [
             { 
+              "ResourceType" : "instance",
               "Tags" : [
                 { "Key" : "Name", "Value" : "VPNHost" }
               ] 
