@@ -71,7 +71,8 @@
         },
         "TemplateURL" : { "Fn::Sub" : "https://${ConfigBucket}.s3.${AWS::Region}.amazonaws.com/Resources/Templates/SubnetGroup.json"},
         "Tags" : [
-          { "Key" : "Public", "Value" : "Yes" }
+          { "Key" : "Public", "Value" : "Yes" },          
+          { "Key" : "VPN-Accessible", "Value" : "Yes" }
         ]
       }
     },
@@ -92,7 +93,8 @@
         "VpcId" : { "Ref" : "DeimosVpc" },
         "Tags" : [
           { "Key" : "Name", "Value" : "PrivateRouteTable" },
-          { "Key" : "OnDemandNAT", "Value" : "True" }
+          { "Key" : "OnDemandNAT", "Value" : "True" },          
+          { "Key" : "VPN-Accessible", "Value" : "Yes" }
         ]       
       }
     },
