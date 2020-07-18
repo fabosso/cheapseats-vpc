@@ -249,7 +249,8 @@
       "Properties" : {
         "Parameters" : {
           "VPCName" : { "Ref" : "VPCName" },
-          "VpnCIDRRange" : { "Ref" : "VpnCIDRRange" }
+          "VpnCIDRRange" : { "Ref" : "VpnCIDRRange" },
+          "VpcId" : { "Ref" : "DeimosVpc" }
         },
         "TemplateURL" : { "Fn::Sub" : "https://${ConfigBucket}.s3.${AWS::Region}.amazonaws.com/Resources/DeimosVPN.json" },
         "Tags" : [
