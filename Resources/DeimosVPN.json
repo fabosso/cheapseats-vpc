@@ -31,7 +31,7 @@
       "Properties" : {
         "LaunchTemplateName" : { "Fn::Sub" : "${VPCName}-VPN-LaunchTemplate" },
         "LaunchTemplateData" : {
-          "ImageID" : { "Ref" : "BaseAMI" },
+          "ImageId" : { "Ref" : "BaseAMI" },
           "InstanceType" : "t3.nano",
           "BlockDeviceMappings" : [ 
             { 
@@ -42,7 +42,7 @@
               }
             }
           ],
-          "Key" : "Deimos-Administration"
+          "KeyName" : "Deimos-Administration"
         }
       }
     },
