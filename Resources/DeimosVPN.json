@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
 
-  "Description" : "Core VPC and IAM Infrastructure",
+  "Description" : "VPN Access Infrastructure",
   
   "Parameters" : {
     "VpnCIDRRange" : {
@@ -19,9 +19,9 @@
       "Default" : "Deimos"
     },
     "BaseAMI" : {
-      "Type" : "AWS::EC2::Image::Id",
+      "Type" : "'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'",
       "Description" : "Base AMI for VPN Server Instance",
-      "Default" : "ami-0a58e22c727337c51"
+      "Default" : "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
     }
   },
   
