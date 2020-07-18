@@ -251,7 +251,10 @@
           "VPCName" : { "Ref" : "VPCName" },
           "VpnCIDRRange" : { "Ref" : "VpnCIDRRange" }
         },
-        "TemplateURL" : { "Fn::Sub" : "https://${ConfigBucket}.s3.${AWS::Region}.amazonaws.com/Resources/DeimosVPN.json"}
+        "TemplateURL" : { "Fn::Sub" : "https://${ConfigBucket}.s3.${AWS::Region}.amazonaws.com/Resources/DeimosVPN.json" },
+        "Tags" : [
+          { "Key" : "Application", "Value" : "VPN" }
+        ]
       }
     }
   },
