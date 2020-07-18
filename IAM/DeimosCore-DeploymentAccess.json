@@ -9,6 +9,7 @@
               "ssm:GetParameters",
               "ssm:GetParameter",
               "sns:*Topic",
+              "sns:Get*",
               "sns:List*"
             ],
             "Resource": "*"
