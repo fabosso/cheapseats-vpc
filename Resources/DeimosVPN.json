@@ -68,7 +68,8 @@
           "NetworkInterfaces" : [
             {
               "AssociatePublicIpAddress" : "true",
-              "Groups" : [ { "Ref" : "VPNServerSecurityGroup" } ]
+              "Groups" : [ { "Ref" : "VPNServerSecurityGroup" } ],
+              "DeviceIndex" : 0
             }
           ],
           "KeyName" : "Deimos-Administration",
