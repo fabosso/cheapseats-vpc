@@ -44,12 +44,13 @@
           ],
           "Key" : "Deimos-Administration"
         }
+      }
     },
     "AutoScalingGroup" : {
       "Type" : "AWS::AutoScaling::AutoScalingGroup",
         "Properties" : {
           "AutoScalingGroupName" : { "Fn::Sub" : "${VPCName}-VPN" },
-          "VPCZoneIdentifier" : { "Fn::Split" : [ { "Fn::ImportValue" : { "Fn::Sub" : "${VPCName}-Public-Subnets" } }, "," ] },
+          "VPCZoneIdentifier" : { "Fn::Split" : [ ",",  { "Fn::ImportValue" : { "Fn::Sub" : "${VPCName}-Public-Subnets" } } ] },
           "MinSize" : 0,
           "MaxSize" : 1,
           "DesiredCapacity" : 0,
