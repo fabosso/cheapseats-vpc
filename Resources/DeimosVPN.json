@@ -71,6 +71,13 @@
       }
     },
     
+    "VPNLaunchNotificationTopic" : {
+      "Type" : "AWS::SNS::Topic",
+      "Properties" : {
+        "TopicName" : { "Fn::Sub" : "${VPCName}-VPN-LaunchNotification" }
+      }
+    },
+    
     "AutoScalingGroup" : {
       "Type" : "AWS::AutoScaling::AutoScalingGroup",
         "Properties" : {
