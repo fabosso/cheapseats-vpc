@@ -1,0 +1,61 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+
+  "Description" : "ECS Cluster for Containerized Applications",
+  
+  "Parameters" : {
+    "ConfigBucket" : {
+       "Type" : "AWS::SSM::Parameter::Value<String>",
+       "Description" : "S3 Bucket for Configuration Artifacts & Templates",
+       "Default" : "/Deimos/ConfigBucket"
+    },
+    "VPCName" : {
+      "Type" : "String" ,
+      "Description" : "Environment Name for VPC and Supporting Infrastructure",
+      "Default" : "Deimos"
+    },
+    "BaseAMI" : {
+      "Type" : "AWS::EC2::Image::Id",
+      "Description" : "Base AMI for ECS Cluster Instance",
+      "Default" : "ami-0e6b68880cc94cf09"
+    }
+  },
+  
+  "Resources" : {
+    "ECSNodeLaunchTemplate" : {
+      "Type" : "AWS::EC2::LaunchTemplate",
+      "Properties" : {
+        "LaunchTemplateName" : { "Fn::Sub" : "${VPCName}-ECS-LaunchTemplate" },
+        "LaunchTemplateData" : {
+          "ImageId" : { "Ref" : "BaseAMI" },
+          "InstanceType" : "t2.micro",
+          "BlockDeviceMappings" : [ 
+            { 
+              "DeviceName" : "/dev/xvda",
+              "Ebs" : {
+                "VolumeSize" : 80,
+                "VolumeType" : "gp2"
+              }
+            }
+          ],
+          "KeyName" : "Deimos-Administration"
+        }
+      }
+    },
+    "AutoScalingGroup" : {
+      "Type" : "AWS::AutoScaling::AutoScalingGroup",
+      "Properties" : {
+        "AutoScalingGroupName" : { "Fn::Sub" : "${VPCName}-ECS-Cluster" },
+        "VPCZoneIdentifier" : { "Fn::Split" : [ ",",  { "Fn::ImportValue" : { "Fn::Sub" : "${VPCName}-Public-Subnets" } } ] },
+        "MinSize" : 0,
+        "MaxSize" : 1,
+        "DesiredCapacity" : 0,
+        "HealthCheckGracePeriod" : 300,
+        "LaunchTemplate" : {
+          "LaunchTemplateId" : { "Ref":"ECSNodeLaunchTemplate" },
+          "Version" : { "Fn::GetAtt" : [ "ECSNodeLaunchTemplate", "LatestVersionNumber" ] }
+        }          
+      }
+    }
+  }
+}
