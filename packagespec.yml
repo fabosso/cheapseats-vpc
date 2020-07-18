@@ -17,6 +17,9 @@ phases:
     commands:
       - echo --- Validating Cloudformation Templates ---
       - aws cloudformation validate-template --template-body file://cf-deimos.json
+      - echo --- Validating Cloudformation Resources ---
+      - aws cloudformation validate-template --template-body file://Resources/DeimosVPN.json
+      - aws cloudformation validate-template --template-body file://Resources/Templates/SubnetGroup.json
   build: 
     commands:
       - echo Upload Target $PACKAGE_BUCKET to $PACKAGE_PREFIX
