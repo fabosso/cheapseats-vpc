@@ -31,7 +31,7 @@
         "CidrBlock" : { "Ref" : "AwsCIDRRange" },
         "EnableDnsSupport" : true,
         "Tags" : [
-          { "Key" : "Name", "Value" : "VPCName" }
+          { "Key" : "Name", "Value" : { "Ref" : "VPCName" } }
         ]       
       }
     },
