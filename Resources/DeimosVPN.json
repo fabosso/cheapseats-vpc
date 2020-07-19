@@ -117,6 +117,71 @@
           }
         ]
       }
-    }
+    },
+    
+    "VpnLaunchHandlerRole" : {
+      "Type" : "AWS::IAM::Role",
+      "Properties" : {
+        "AssumeRolePolicyDocument" : {
+          "Version" : "2012-10-17",
+          "Statement" : [ {
+            "Effect" : "Allow",
+            "Principal" : {
+              "Service" : [ "lambda.amazonaws.com" ]
+            },
+            "Action" : [ "sts:AssumeRole" ]
+          } ]
+        },
+        "RoleName" : "DeimosVpn-LaunchHandlerRole",
+        "Path" : "/deimosvpn/",
+        "ManagedPolicyArns" : [
+          "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+        ]
+      }
+    },
+    
+    "VpnLaunchHandlerPolicy" : {
+      "DependsOn" : [ "VpnLaunchHandlerRole" ],
+      "Type" : "AWS::IAM::Policy",
+      "Properties" : {
+        "PolicyName" : "DeimosVpn-LaunchHandlerPolicy",
+        "Roles" : [ { "Ref" : "VpnLaunchHandlerRole" } ],
+        "PolicyDocument" : {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "VPNUpdateRouting",
+              "Effect": "Allow",
+              "Action": [
+                "ec2:DescribeInstances",
+                "ec2:DescribeTags",
+                "ec2:DeleteRoute",
+                "ec2:CreateTags",
+                "ec2:ReplaceRoute",
+                "ec2:CreateRoute",
+                "ec2:DescribeRouteTables"
+              ],
+              "Resource": "*"
+            }
+          ]
+        }
+      }
+    },
+    
+    "VpnLaunchHandlerLambda" : {
+      "Type" : "AWS::Lambda::Function",
+      "Properties" : {
+       "FunctionName" : { "Fn::Sub" : "${VPCName}-VPNLaunchHandler" },
+       "Description" : "Updates Routing and Network Configuration when a VPN Host is stopped or started",
+       "Code" : {
+         "S3Bucket" : { "Ref" : "ConfigBucket" },
+         "S3Key" : "Resources/Lambda/VPNLaunchedHandler.zip"
+       },
+       "Handler" : "VPNLaunchedHandler.vpn_launched_handler",
+       "Runtime" : "python3.6",
+       "Timeout" : 300,
+       "Role"    : { "Fn::GetAtt" : [ "VpnLaunchHandlerRole", "Arn" ] }
+       }
+    },    
   }
 }
