@@ -94,29 +94,29 @@
     
     "AutoScalingGroup" : {
       "Type" : "AWS::AutoScaling::AutoScalingGroup",
-        "Properties" : {
-          "AutoScalingGroupName" : { "Fn::Sub" : "${VPCName}-VPN" },
-          "VPCZoneIdentifier" : { "Fn::Split" : [ ",",  { "Fn::ImportValue" : { "Fn::Sub" : "${VPCName}-Public-Subnets" } } ] },
-          "MinSize" : 0,
-          "MaxSize" : 1,
-          "DesiredCapacity" : 0,
-          "HealthCheckGracePeriod" : 300,
-          "LaunchTemplate" : {
-            "LaunchTemplateId" : { "Ref":"VPNServerLaunchTemplate" },
-            "Version" : { "Fn::GetAtt" : [ "VPNServerLaunchTemplate", "LatestVersionNumber" ] }
-          },
-          "NotificationConfigurations" : [
-            {
-              "NotificationTypes" : [
-                "autoscaling:EC2_INSTANCE_LAUNCH",
-                "autoscaling:EC2_INSTANCE_LAUNCH_ERROR",
-                "autoscaling:EC2_INSTANCE_TERMINATE",
-                "autoscaling:EC2_INSTANCE_TERMINATE_ERROR"
-              ],
-              "TopicARN" : { "Ref" : "VPNLaunchNotificationTopic" } 
-            }
-          ]
-        }
+      "Properties" : {
+        "AutoScalingGroupName" : { "Fn::Sub" : "${VPCName}-VPN" },
+        "VPCZoneIdentifier" : { "Fn::Split" : [ ",",  { "Fn::ImportValue" : { "Fn::Sub" : "${VPCName}-Public-Subnets" } } ] },
+        "MinSize" : 0,
+        "MaxSize" : 1,
+        "DesiredCapacity" : 0,
+        "HealthCheckGracePeriod" : 300,
+        "LaunchTemplate" : {
+          "LaunchTemplateId" : { "Ref":"VPNServerLaunchTemplate" },
+          "Version" : { "Fn::GetAtt" : [ "VPNServerLaunchTemplate", "LatestVersionNumber" ] }
+        },
+        "NotificationConfigurations" : [
+          {
+            "NotificationTypes" : [
+              "autoscaling:EC2_INSTANCE_LAUNCH",
+              "autoscaling:EC2_INSTANCE_LAUNCH_ERROR",
+              "autoscaling:EC2_INSTANCE_TERMINATE",
+              "autoscaling:EC2_INSTANCE_TERMINATE_ERROR"
+            ],
+            "TopicARN" : { "Ref" : "VPNLaunchNotificationTopic" } 
+          }
+        ]
+      }
     }
   }
 }
