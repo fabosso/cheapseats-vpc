@@ -22,15 +22,17 @@ phases:
       - aws cloudformation validate-template --template-body file://Resources/Templates/SubnetGroup.json
   build: 
     commands:
-      - echo Upload Target $PACKAGE_BUCKET to $PACKAGE_PREFIX
-      - aws cloudformation package --template-file cf-deimos.json --s3-bucket $PACKAGE_BUCKET --s3-prefix $PACKAGE_PREFIX --kms-key-id $KMS_S3KEY --output-template-file cf-deimos-packed.json
-      - aws cloudformation validate-template --template-body file://cf-deimos-packed.json
+      - echo --- Packaging Lambda Functions ---
+      - mkdir -p Resources/Lambda
+      - PKGROOT=`pwd`
+      - cd ${PKGROOT}/Lambda/OnDemandNAT
+      - zip -r ${PKGROOT}/Resources/Lambda/OnDemandNAT.zip *
 artifacts:
   secondary-artifacts:
     DeimosCloudFormation:
       base-directory: ./
       files:
-        - cf-deimos-packed.json
+        - cf-deimos.json
     DeimosResources:
       base-directory: Resources
       files:
