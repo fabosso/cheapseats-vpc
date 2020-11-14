@@ -191,6 +191,18 @@
         "Endpoint" : { "Fn::GetAtt" : [ "VpnLaunchHandlerLambda", "Arn" ] },
         "TopicArn" : { "Ref" : "VPNLaunchNotificationTopic" }
       }
-    }
+    },
+    
+   
+    "VpnLaunchSubscriptionPermission" : {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:invokeFunction",
+        "FunctionName": {"Fn::GetAtt": ["VpnLaunchHandlerLambda", "Arn"]},
+        "Principal": "sns.amazonaws.com",
+        "SourceArn": { "Ref" : "VPNLaunchNotificationTopic" }
+      }
+    },
+    
   }
 }
