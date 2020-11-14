@@ -182,6 +182,15 @@
        "Timeout" : 300,
        "Role"    : { "Fn::GetAtt" : [ "VpnLaunchHandlerRole", "Arn" ] }
        }
-    },    
+    },
+    
+    "VpnLaunchHandlerSubscription" : {
+      "Type" : "AWS::SNS::Subscription",
+      "Properties" : {
+        "Protocol" : "lambda",
+        "Endpoint" : { "Fn::GetAtt" : [ "VpnLaunchHandlerLambda", "Arn" ] },
+        "TopicArn" : { "Ref" : "VPNLaunchNotificationTopic" }
+      }
+    }
   }
 }
