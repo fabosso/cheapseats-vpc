@@ -10,6 +10,9 @@ def vpn_launched(instanceid):
     
     vpn_instance.wait_until_running()
     print("Instance Running: %s\n" % instanceid)
+    
+    # Disable Source / Destination check to allow this box to act as an OpenVPN router.
+    ec2.modify_instance_attribute(InstanceId=instanceid, SourceDestCheck={'Value': False})
 
 def vpn_stopped(instanceid):
     print("Instance Stopped: %s\n" % instanceid)
