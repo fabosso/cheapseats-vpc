@@ -46,6 +46,16 @@
       }
     },
     
+   "VPNCidrRange" : {
+      "Type" : "AWS::SSM::Parameter",
+      "Properties" : {
+        "Name" : "/Deimos/VPN/HomeNetworkCIDR",
+        "Type" : "String",
+        "Description" : "CIDR range for connected VPN clients",
+        "Value" : { "Ref" : "VpnCIDRRange" }
+      }
+   },
+    
     "VPNServerLaunchTemplate" : {
       "Type" : "AWS::EC2::LaunchTemplate",
       "Properties" : {
