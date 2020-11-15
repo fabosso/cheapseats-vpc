@@ -180,6 +180,16 @@
                 "xray:PutTelemetryRecords"
               ],
               "Resource": [ "*" ]
+            },
+            {  
+              "Effect": "Allow",
+              "Action": [
+                "ssm:GetParameters",
+                "ssm:GetParameter"
+              ],
+              "Resource" : [
+                { "Fn::Sub" : "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${VPCName}/VPN/*" }
+              ]
             }
           ]
         }
