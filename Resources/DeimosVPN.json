@@ -177,7 +177,7 @@
          "S3Bucket" : { "Ref" : "ConfigBucket" },
          "S3Key" : "Resources/Lambda/VPNLaunchedHandler.zip"
        },
-       "Handler" : "VPNLaunchedHandler.vpn_launched_handler",
+       "Handler" : "VPNLaunchedHandler.notification_handler",
        "Runtime" : "python3.6",
        "Timeout" : 300,
        "Role"    : { "Fn::GetAtt" : [ "VpnLaunchHandlerRole", "Arn" ] }
