@@ -49,7 +49,7 @@
    "VPNCidrRange" : {
       "Type" : "AWS::SSM::Parameter",
       "Properties" : {
-        "Name" : "/Deimos/VPN/HomeNetworkCIDR",
+        "Name" : { "Fn::Sub" : "/${VPCName}/VPN/HomeNetworkCIDR",
         "Type" : "String",
         "Description" : "CIDR range for connected VPN clients",
         "Value" : { "Ref" : "VpnCIDRRange" }
@@ -198,7 +198,13 @@
        "Handler" : "VPNLaunchedHandler.notification_handler",
        "Runtime" : "python3.6",
        "Timeout" : 300,
-       "Role"    : { "Fn::GetAtt" : [ "VpnLaunchHandlerRole", "Arn" ] }
+       "Role"    : { "Fn::GetAtt" : [ "VpnLaunchHandlerRole", "Arn" ] },
+       "Enviromnent" : { 
+         "Variables" : {
+           "VpcId" : { "Ref" : "VpcId" },
+           "VpcName" : { "Ref" : "VPCName" }
+         }
+       }
        }
     },
     
