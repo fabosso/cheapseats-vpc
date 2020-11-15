@@ -15,14 +15,14 @@ def get_ssm_parameter(param):
     
     return jmespath.search('Parameter.Value', json)
 
-def list_target_routes()
+def list_target_routes():
     routes_json = ec2.describe_route_tables(Filters=[{'Name' : 'tag:VPN-Accessible', 'Values' : ['Yes', 'True']},
                                                      {'Name' : 'vpc-id', 'Values' : [vpc]}])
     return jmespath.search('RouteTables[*].RouteTableId', routes_json)
     
 def vpn_launched(instanceid):
     print("Instance Launched: %s\n" % instanceid)
-    vpn_instance = ecc.Instance(instanceid)
+    vpn_instance = ec2.Instance(instanceid)
     vpn_cidr = get_ssm_parameter('/%s/Vpn/HomeNetworkCIDR' % vpcname)
     
     vpn_instance.wait_until_running()
