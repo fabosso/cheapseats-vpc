@@ -5,6 +5,7 @@ import boto3
 from os import environ
 
 ec2 = boto3.client('ec2')
+ec2_resource = boto3.resource('ec2')
 ssm = boto3.client('ssm')
 
 vpc = environ.get('VPC_ID')
@@ -22,7 +23,7 @@ def list_target_routes():
     
 def vpn_launched(instanceid):
     print("Instance Launched: %s\n" % instanceid)
-    vpn_instance = ec2.Instance(instanceid)
+    vpn_instance = ec2_resource.Instance(instanceid)
     vpn_cidr = get_ssm_parameter('/%s/Vpn/HomeNetworkCIDR' % vpcname)
     
     vpn_instance.wait_until_running()
