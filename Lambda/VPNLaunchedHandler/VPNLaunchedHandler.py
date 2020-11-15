@@ -24,7 +24,7 @@ def list_target_routes():
 def vpn_launched(instanceid):
     print("Instance Launched: %s\n" % instanceid)
     vpn_instance = ec2_resource.Instance(instanceid)
-    vpn_cidr = get_ssm_parameter('/%s/Vpn/HomeNetworkCIDR' % vpcname)
+    vpn_cidr = get_ssm_parameter('/%s/VPN/HomeNetworkCIDR' % vpcname)
     
     vpn_instance.wait_until_running()
     print("Instance Running: %s\n" % instanceid)
@@ -40,7 +40,7 @@ def vpn_launched(instanceid):
 def vpn_stopped(instanceid):
     print("Instance Stopped: %s\n" % instanceid)
     
-    vpn_cidr = get_ssm_parameter('/%s/Vpn/HomeNetworkCIDR' % vpcname)
+    vpn_cidr = get_ssm_parameter('/%s/VPN/HomeNetworkCIDR' % vpcname)
     for routeTableId in list_target_routes():
         print("Removing VPN route for Route Table %s" % routeTableId)
         try:
