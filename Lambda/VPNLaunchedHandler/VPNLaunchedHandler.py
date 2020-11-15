@@ -3,6 +3,7 @@ import jmespath
 import boto3
 
 from os import environ
+from botocore.exceptions import ClientError
 
 ec2 = boto3.client('ec2')
 ec2_resource = boto3.resource('ec2')
