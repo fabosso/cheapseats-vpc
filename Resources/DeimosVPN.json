@@ -237,6 +237,42 @@
         "Principal": "sns.amazonaws.com",
         "SourceArn": { "Ref" : "VPNLaunchNotificationTopic" }
       }
+    },
+    
+    "VpnCodeDeployRole" : {
+      "Type" : "AWS::IAM::Role",
+      "Properties" : {
+        "AssumeRolePolicyDocument" : {
+          "Version" : "2012-10-17",
+          "Statement" : [ {
+            "Effect" : "Allow",
+            "Principal" : {
+              "Service" : [ "codedeploy.amazonaws.com" ]
+            },
+            "Action" : [ "sts:AssumeRole" ]
+          } ]
+        },
+        "RoleName" : "DeimosVpn-CodeDeployRole",
+        "Path" : "/deimosvpn/"
+      }
+    },
+    
+    "VpnApplication" : {
+      "Type" : "AWS::CodeDeploy::Application",
+      "Properties" : {
+        "ApplicationName" : { "Fn::Sub" : "${VPCName} VPN Server" },
+        "ComputePlatform" : "Server"
+      }
+    },
+    
+    "VpnApplicationDeployment" : {
+      "Type" : "AWS::CodeDeploy::DeploymentGroup",
+      "Properties" : {
+        "ApplicationName" : { "Ref" : "VpnApplication" },
+        "AutoScalingGroups" : [ { "Ref" : "AutoScalingGroup" } ],
+        "DeploymentConfigName" : "CodeDeployDefault.AllAtOnce",
+        "ServiceRoleArn" : {"Fn::GetAtt": ["VpnCodeDeployRole", "Arn"]}
+      }
     }
   }
 }
