@@ -170,7 +170,7 @@
                 "ec2:ReplaceRoute",
                 "ec2:CreateRoute",
                 "ec2:DescribeRouteTables",
-                "ec2:ModifyInterfaceAttribute",
+                "ec2:ModifyInstanceAttribute",
                 "ec2:ModifyNetworkInterfaceAttribute"
               ],
               "Resource": "*"
