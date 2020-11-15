@@ -162,6 +162,14 @@
                 "ec2:DescribeRouteTables"
               ],
               "Resource": "*"
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "xray:PutTraceSegments",
+                "xray:PutTelemetryRecords"
+              ],
+              "Resource": [ "*" ]
             }
           ]
         }
