@@ -260,7 +260,7 @@
     "VpnApplication" : {
       "Type" : "AWS::CodeDeploy::Application",
       "Properties" : {
-        "ApplicationName" : { "Fn::Sub" : "${VPCName} VPN Server" },
+        "ApplicationName" : { "Fn::Sub" : "${VPCName}-OpenVPN-Server" },
         "ComputePlatform" : "Server"
       }
     },
