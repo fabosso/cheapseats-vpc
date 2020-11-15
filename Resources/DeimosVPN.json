@@ -201,8 +201,8 @@
        "Role"    : { "Fn::GetAtt" : [ "VpnLaunchHandlerRole", "Arn" ] },
        "Enviromnent" : { 
          "Variables" : {
-           "VpcId" : { "Ref" : "VpcId" },
-           "VpcName" : { "Ref" : "VPCName" }
+           "VPC_ID" : { "Ref" : "VpcId" },
+           "VPC_NAME" : { "Ref" : "VPCName" }
          }
        }
        }
