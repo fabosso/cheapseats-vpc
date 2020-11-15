@@ -169,7 +169,9 @@
                 "ec2:CreateTags",
                 "ec2:ReplaceRoute",
                 "ec2:CreateRoute",
-                "ec2:DescribeRouteTables"
+                "ec2:DescribeRouteTables",
+                "ec2:ModifyInterfaceAttribute",
+                "ec2:ModifyNetworkInterfaceAttribute"
               ],
               "Resource": "*"
             },
