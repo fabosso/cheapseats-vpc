@@ -49,7 +49,7 @@
    "VPNCidrRange" : {
       "Type" : "AWS::SSM::Parameter",
       "Properties" : {
-        "Name" : { "Fn::Sub" : "/${VPCName}/VPN/HomeNetworkCIDR",
+        "Name" : { "Fn::Sub" : "/${VPCName}/VPN/HomeNetworkCIDR" },
         "Type" : "String",
         "Description" : "CIDR range for connected VPN clients",
         "Value" : { "Ref" : "VpnCIDRRange" }
@@ -199,14 +199,14 @@
        "Runtime" : "python3.6",
        "Timeout" : 300,
        "Role"    : { "Fn::GetAtt" : [ "VpnLaunchHandlerRole", "Arn" ] },
-       "Enviromnent" : { 
+       "Environment" : { 
          "Variables" : {
            "VPC_ID" : { "Ref" : "VpcId" },
            "VPC_NAME" : { "Ref" : "VPCName" }
          }
        }
-       }
-    },
+     }
+   },
     
     "VpnLaunchHandlerSubscription" : {
       "Type" : "AWS::SNS::Subscription",
@@ -215,8 +215,7 @@
         "Endpoint" : { "Fn::GetAtt" : [ "VpnLaunchHandlerLambda", "Arn" ] },
         "TopicArn" : { "Ref" : "VPNLaunchNotificationTopic" }
       }
-    },
-    
+    },    
    
     "VpnLaunchSubscriptionPermission" : {
       "Type": "AWS::Lambda::Permission",
@@ -226,7 +225,6 @@
         "Principal": "sns.amazonaws.com",
         "SourceArn": { "Ref" : "VPNLaunchNotificationTopic" }
       }
-    },
-    
+    }
   }
 }
