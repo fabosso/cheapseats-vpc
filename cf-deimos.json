@@ -53,7 +53,8 @@
       "Properties" : {
         "VpcId" : { "Ref" : "DeimosVpc" },
         "Tags" : [
-          { "Key" : "Name", "Value" : "PublicRouteTable" }
+          { "Key" : "Name", "Value" : "PublicRouteTable" },
+          { "Key" : "VPN-Accessible", "Value" : "Yes" }
         ]       
       }
     },
