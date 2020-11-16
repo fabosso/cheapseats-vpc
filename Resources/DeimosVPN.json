@@ -293,6 +293,7 @@
     },
     
     "VpnApplicationDeployment" : {
+      "DependsOn" : [ "VpnCodeDeployPolicy" ],
       "Type" : "AWS::CodeDeploy::DeploymentGroup",
       "Properties" : {
         "ApplicationName" : { "Ref" : "VpnApplication" },
