@@ -253,34 +253,10 @@
           } ]
         },
         "RoleName" : "DeimosVpn-CodeDeployRole",
-        "Path" : "/deimosvpn/"
-      }
-    },
-    
-    "VpnCodeDeployPolicy" : {
-      "DependsOn" : [ "VpnCodeDeployRole" ],
-      "Type" : "AWS::IAM::Policy",
-      "Properties" : {
-        "PolicyName" : "DeimosVpn-CodeDeployPolicy",
-        "Roles" : [ { "Ref" : "VpnCodeDeployRole" } ],
-        "PolicyDocument" : {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Sid": "AutoScalingIntegrate",
-              "Effect": "Allow",
-              "Action": [
-                "autoscaling:DescribeLifecycleHookTypes",
-                "autoscaling:CompleteLifecycleAction",
-                "autoscaling:PutLifecycleHook",
-                "autoscaling:DeleteLifecycleHook",
-                "autoscaling:DescribeLifecycleHooks",
-                "autoscaling:RecordLifecycleActionHeartbeat"
-              ],
-              "Resource": "*"
-            }
-          ]
-        }
+        "Path" : "/deimosvpn/",
+        "ManagedPolicyArns" : [
+          "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
+        ]
       }
     },
     
@@ -293,7 +269,7 @@
     },
     
     "VpnApplicationDeployment" : {
-      "DependsOn" : [ "VpnCodeDeployPolicy" ],
+      "DependsOn" : [ "VpnCodeDeployRole" ],
       "Type" : "AWS::CodeDeploy::DeploymentGroup",
       "Properties" : {
         "ApplicationName" : { "Ref" : "VpnApplication" },
