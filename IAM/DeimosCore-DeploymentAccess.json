@@ -107,6 +107,19 @@
             "events:Untag*"
         ],
         "Resource" : "*"
+    },
+    {
+        "Sid" : "DeimosCodeDeploy",
+        "Effect" : "Allow",
+        "Action" : [
+            "codedeploy:Get*",
+            "codedeploy:List*",
+            "codedeploy:TagResource",
+            "codedeploy:UntagResource",
+            "codedeploy:Create*",
+            "codedeploy:Delete*"
+        ],
+        "Resource" : "*"
     }
     ]
 }
