@@ -15,8 +15,7 @@ phases:
   pre_build:
     commands:
       - echo --- Fetching AWS Key Information --
-      - which aws
-      - export KMS_S3KEY=`/usr/local/bin/aws kms describe-key --key-id alias/aws/s3 --query 'KeyMetadata.KeyId'`
+      - export KMS_S3KEY=`aws kms describe-key --key-id alias/aws/s3 --query 'KeyMetadata.KeyId'`
       - echo --- Validating Cloudformation Templates ---
       - aws cloudformation validate-template --template-body file://cf-deimos.json
       - echo --- Validating Cloudformation Resources ---
