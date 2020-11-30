@@ -3,7 +3,6 @@ version: 0.2
 env:
   variables:
     PACKAGE_PREFIX: "Packages/DeimosCore"
-    KMS_S3KEY: "b9b0289a-a6e1-427c-9686-33472172bc33"
 
 phases:
   install:
@@ -15,6 +14,8 @@ phases:
       - pip install --upgrade awscli
   pre_build:
     commands:
+      - echo --- Fetching AWS Key Information --
+      - export KMS_S3KEY = `/usr/bin/aws kms describe-key --key-id alias/aws/s3 --query 'KeyMetadata.KeyId'`
       - echo --- Validating Cloudformation Templates ---
       - aws cloudformation validate-template --template-body file://cf-deimos.json
       - echo --- Validating Cloudformation Resources ---
