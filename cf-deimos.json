@@ -253,6 +253,7 @@
     
     "VPNService" : {
       "Type" : "AWS::CloudFormation::Stack",
+      "DependsOn" : "PublicSubnets",
       "Properties" : {
         "Parameters" : {
           "VPCName" : { "Ref" : "VPCName" },
