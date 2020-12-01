@@ -25,7 +25,7 @@
   },
   
   "Resources" : {
-    "DeimosVpc" : {
+    "Vpc" : {
       "Type" : "AWS::EC2::VPC",
       "Properties" : {
         "CidrBlock" : { "Ref" : "AwsCIDRRange" },
@@ -43,7 +43,7 @@
     "IgwAttachment" : {
       "Type" : "AWS::EC2::VPCGatewayAttachment",
       "Properties" : {
-        "VpcId" : { "Ref" : "DeimosVpc" },
+        "VpcId" : { "Ref" : "Vpc" },
         "InternetGatewayId" : { "Ref" : "InternetGateway" }
       }
     },
@@ -51,7 +51,7 @@
     "PublicRouteTable" : {
       "Type" : "AWS::EC2::RouteTable",
       "Properties" : {
-        "VpcId" : { "Ref" : "DeimosVpc" },
+        "VpcId" : { "Ref" : "Vpc" },
         "Tags" : [
           { "Key" : "Name", "Value" : "PublicRouteTable" },
           { "Key" : "VPN-Accessible", "Value" : "Yes" }
@@ -65,7 +65,7 @@
         "Parameters" : {
           "SubnetGroupName" : "Public",
           "CidrRange" : { "Fn::Select" : [ 0,  { "Fn::Cidr" : [ { "Ref" : "AwsCIDRRange" }, 2, 14 ] } ] },
-          "VpcId" : { "Ref" : "DeimosVpc" },
+          "VpcId" : { "Ref" : "Vpc" },
           "VPCName" : { "Ref" : "VPCName" },
           "MaskSize" : 8,
           "RouteTable" : { "Ref" : "PublicRouteTable" }
@@ -91,7 +91,7 @@
     "PrivateRouteTable" : {
       "Type" : "AWS::EC2::RouteTable",
       "Properties" : {
-        "VpcId" : { "Ref" : "DeimosVpc" },
+        "VpcId" : { "Ref" : "Vpc" },
         "Tags" : [
           { "Key" : "Name", "Value" : "PrivateRouteTable" },
           { "Key" : "OnDemandNAT", "Value" : "True" },          
@@ -106,7 +106,7 @@
         "Parameters" : {
           "SubnetGroupName" : "Private",
           "CidrRange" : { "Fn::Select" : [ 1,  { "Fn::Cidr" : [ { "Ref" : "AwsCIDRRange" }, 2, 14 ] } ] },
-          "VpcId" : { "Ref" : "DeimosVpc" },
+          "VpcId" : { "Ref" : "Vpc" },
           "VPCName" : { "Ref" : "VPCName" },
           "MaskSize" : 8,
           "RouteTable" : { "Ref" : "PrivateRouteTable" }
@@ -257,7 +257,7 @@
         "Parameters" : {
           "VPCName" : { "Ref" : "VPCName" },
           "VpnCIDRRange" : { "Ref" : "VpnCIDRRange" },
-          "VpcId" : { "Ref" : "DeimosVpc" }
+          "VpcId" : { "Ref" : "Vpc" }
         },
         "TemplateURL" : { "Fn::Sub" : "https://${ConfigBucket}.s3.${AWS::Region}.amazonaws.com/Resources/DeimosVPN.json" },
         "Tags" : [
@@ -270,7 +270,7 @@
   "Outputs" : {
     "VpcId" : {
       "Description" : "VPC ID of VPC",
-      "Value" : { "Ref" : "DeimosVpc" },
+      "Value" : { "Ref" : "Vpc" },
       "Export" : {
         "Name" : { "Fn::Sub" : "${VPCName}-VPCID" }
       }
