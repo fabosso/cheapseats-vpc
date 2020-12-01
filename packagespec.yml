@@ -1,8 +1,9 @@
 version: 0.2
 
 env:
-  variables:
-    PACKAGE_PREFIX: "Packages/DeimosCore"
+  parameter-store:
+    PACKAGE_BUCKET: "/Account/ConfigBucket"
+    PACKAGE_PREFIX: "/Account/ConfigBucket/ArtifactPrefix"
 
 phases:
   install:
@@ -23,6 +24,10 @@ phases:
       - aws cloudformation validate-template --template-body file://Resources/Templates/SubnetGroup.json
   build: 
     commands:
+      - echo --- Packaging Templates ---
+      - mkdir Packed
+      - echo Upload Target $PACKAGE_BUCKET to $PACKAGE_PREFIX
+      - aws cloudformation package --template-file cf-deimos.json --s3-bucket $PACKAGE_BUCKET --s3-prefix ${PACKAGE_PREFIX}/VPC --kms-key-id $KMS_S3KEY --output-template-file Packed/cf-deimos.json      
       - echo --- Packaging Lambda Functions ---
       - mkdir -p Resources/Lambda
       - PKGROOT=`pwd`
@@ -30,15 +35,15 @@ phases:
       - zip -r ${PKGROOT}/Resources/Lambda/OnDemandNAT.zip *
       - cd ${PKGROOT}/Lambda/VPNLaunchedHandler
       - zip -r ${PKGROOT}/Resources/Lambda/VPNLaunchedHandler.zip *
+
 artifacts:
   secondary-artifacts:
     DeimosCloudFormation:
-      base-directory: ./
+      base-directory: Packed/
       files:
         - cf-deimos.json
     DeimosResources:
       base-directory: Resources
       files:
         - '**/*'
-        
     
