@@ -15,7 +15,7 @@
     "ConfigBucket" : {
        "Type" : "AWS::SSM::Parameter::Value<String>",
        "Description" : "S3 Bucket for Configuration Artifacts & Templates",
-       "Default" : "/Deimos/ConfigBucket"
+       "Default" : "/AccountEnv/ConfigBucket"
     },
     "VPCName" : {
       "Type" : "String" ,
