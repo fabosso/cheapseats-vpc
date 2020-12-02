@@ -20,7 +20,10 @@
             ],
             "Resource": [
                 "arn:aws:s3:::codepipeline-ap-southeast-2-810622726934",
+                "arn:aws:s3:::deimos-configmgmt",
                 "arn:aws:s3:::codepipeline-ap-southeast-2-810622726934/*",
+                "arn:aws:s3:::deimos-configmgmt/Build/*",
+                "arn:aws:s3:::deimos-configmgmt/Resources/*",
                 "arn:aws:kms:*:495602461790:key/*"
             ]
         },
