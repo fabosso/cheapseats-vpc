@@ -198,7 +198,7 @@
       "Properties" : {
        "FunctionName" : { "Fn::Sub" : "${VPCName}-RequestNATGateway" },
        "Description" : "Request a NAT Gateway (Provisioning one if it isn't already available)",
-       "Code" : "Resources/Lambda/OnDemandNAT",
+       "Code" : "./Resources/Lambda/OnDemandNAT",
        "Handler" : "RequestGateway.request_gateway_handler",
        "Runtime" : "python3.6",
        "Timeout" : 300,
