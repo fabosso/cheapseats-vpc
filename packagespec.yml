@@ -31,8 +31,6 @@ phases:
       - echo --- Packaging Lambda Functions ---
       - mkdir -p Resources/Lambda
       - PKGROOT=`pwd`
-      - cd ${PKGROOT}/Lambda/OnDemandNAT
-      - zip -r ${PKGROOT}/Resources/Lambda/OnDemandNAT.zip *
       - cd ${PKGROOT}/Lambda/VPNLaunchedHandler
       - zip -r ${PKGROOT}/Resources/Lambda/VPNLaunchedHandler.zip *
 

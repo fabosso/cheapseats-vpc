@@ -198,10 +198,7 @@
       "Properties" : {
        "FunctionName" : { "Fn::Sub" : "${VPCName}-RequestNATGateway" },
        "Description" : "Request a NAT Gateway (Provisioning one if it isn't already available)",
-       "Code" : {
-         "S3Bucket" : { "Ref" : "ConfigBucket" },
-         "S3Key" : "Resources/Lambda/OnDemandNAT.zip"
-       },
+       "Code" : "Resources/Lambda/OnDemandNAT",
        "Handler" : "RequestGateway.request_gateway_handler",
        "Runtime" : "python3.6",
        "Timeout" : 300,
