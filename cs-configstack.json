@@ -1,0 +1,56 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+
+  "Description" : "Cheapseats Core Configuration and Supporting Infrastructure",
+  
+  "Parameters" : {
+    "CreateBucket" : {
+      "Type" : "String",
+      "Description" : "Create a new configuration bucket?",
+      "AllowedValues" : ["Yes", "No"],
+      "Default" : "Yes"
+    },
+    "ConfigBucketName" : {
+       "Type" : "String",
+       "Description" : "S3 Bucket for Configuration Artifacts & Templates",
+       "Default" : "bucket_name_here"
+    },
+    "ArtifactPrefix" : {
+       "Type" : "String",
+       "Description" : "Key Prefix for Deployment Artifacts",
+       "Default" : "Resources/Deployment"
+    },
+  },
+  
+  "Conditions" : {
+    "ShouldCreateBucket" : { "Fn::Equals" : [ { "Ref" : "CreateBucket" }, "Yes" ] }
+  },
+  
+  "Resources" : {
+    "ConfigBucketObject" : {
+      "Type" : "AWS::S3::Bucket",
+      "Condition" : "ShouldCreateBucket",
+      "DeletionPolicy" : "Retain",
+      "Properties" : {
+      }
+    },
+  
+    "ConfigBucketParam" : {
+      "Type" : "AWS::SSM::Parameter",
+      "Properties" : {
+        "Name" : "/CheapSeats/Env/ConfigBucket",
+        "Type" : "String",
+        "Value" : { "Fn::If" : [ "ShouldCreateBucket", { "Ref" : "ConfigBucketObject" }, { "Ref" : "ConfigBucketName" } ] }
+      }
+    },  
+
+    "ArtifactPrefixParam" : {
+      "Type" : "AWS::SSM::Parameter",
+      "Properties" : {
+        "Name" : "/CheapSeats/Env/ArtifactPrefix",
+        "Type" : "String",
+        "Value" : { "Ref" : "ArtifactPrefix" }
+      }
+    },
+  },
+}
