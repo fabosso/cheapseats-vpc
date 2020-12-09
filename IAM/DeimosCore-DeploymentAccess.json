@@ -29,7 +29,8 @@
                 "ssm:RemoveTagsFromResource"
             ],
             "Resource": [
-                "arn:aws:ssm:*:495602461790:parameter/Deimos/*"
+                "arn:aws:ssm:*:495602461790:parameter/Deimos/*",
+                "arn:aws:ssm:*:495602461790:parameter/Vpc/*"
             ]
         },
         {
