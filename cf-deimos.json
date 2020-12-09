@@ -123,7 +123,8 @@
       "Properties" : {
         "Domain" : "vpc",
         "Tags" : [ 
-          { "Key" : "Name", "Value" : "OnDemandNAT-IPAddr" }
+          { "Key" : "Name", "Value" : "OnDemandNAT-IPAddr" },
+          { "Key" : "ForVpc", "Value" : { "Ref" : "VPCName" }}
         ]
       }
     },
@@ -204,8 +205,8 @@
        "Timeout" : 300,
        "Environment" : {
          "Variables" : { 
-           "VpcName" : { "Ref" : "VPCName" },
-           "VpcId"   : { "Ref" : "Vpc" }
+           "VPC_NAME" : { "Ref" : "VPCName" },
+           "VPC_ID"   : { "Ref" : "Vpc" }
          }
        },
        "Role"    : { "Fn::GetAtt" : [ "OnDemandNatLambdaRole", "Arn" ] }
