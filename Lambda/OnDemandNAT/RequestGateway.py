@@ -45,10 +45,16 @@ def vpc_has_natgw():
         return None
     
 def create_nat_gateway():
-    alloc_json = ec2.describe_addresses(Filters=[{'Name' : 'tag:Name', 'Values' : ['OnDemandNAT-IPAddr']}])
+    alloc_json = ec2.describe_addresses(Filters=[
+        {'Name' : 'tag:Name', 'Values' : ['OnDemandNAT-IPAddr']},
+        {'Name' : 'tag:ForVpc', 'Values' : [os.environ['VPC_NAME']]}
+    ])
     allocId = jmespath.search('Addresses[0].AllocationId', alloc_json )
     
-    subnet_json = ec2.describe_subnets(Filters=[{'Name' : 'tag:Public', 'Values' : ['Yes']}])
+    subnet_json = ec2.describe_subnets(Filters=[
+        {'Name' : 'tag:Public', 'Values' : ['Yes']},
+        {'Name' : 'vpc-id', 'Values' : [os.environ['VPC_ID']}
+    ])
     subnet_list = jmespath.search('Subnets[*].SubnetId', subnet_json)
     subnetId = random.choice(subnet_list)
     
@@ -63,8 +69,7 @@ def create_nat_gateway():
         {'Key' : 'OnDemandNAT', 'Value' : 'True'}
       , {'Key' : 'Name', 'Value' : 'OnDemandNAT-Gateway'}
       , {'Key' : 'LastRequested', 'Value' : '%s' % datetime.utcnow()}
-      , {'Key' : 'Project', 'Value' : 'Deimos-Infra'}
-      , {'Key' : 'UseCase', 'Value' : 'AWS-Admin'}
+      , {'Key' : 'ForVpc', 'Value' : os.environ['VPC_NAME']}
       , {'Key' : 'Application', 'Value' : 'OnDemandNAT'}
       , {'Key' : 'Environment', 'Value' : 'Infrastructure'}
       ]
