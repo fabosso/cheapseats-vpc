@@ -173,7 +173,7 @@ def request_gateway_handler(event, context):
         
         print("SUMMARY:\n%s\n" % json.dumps(info))
         return info        
-    except Exception as e:
+    except BaseException as e:
         if 'CodePipeline.job' in event:
             job = event['CodePipeline.job']
         
