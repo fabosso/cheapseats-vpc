@@ -18,14 +18,14 @@ phases:
       - echo --- Fetching AWS Key Information --
       - export KMS_S3KEY=`aws kms describe-key --key-id alias/aws/s3 --query 'KeyMetadata.KeyId' | tr -d \"`
       - echo --- Validating Cloudformation Templates ---
-      - aws cloudformation validate-template --template-body file://cf-deimos.json
+      - aws cloudformation validate-template --template-body file://cf-cheapseats-vpc.json
       - echo --- Validating Cloudformation Resources ---
       - aws cloudformation validate-template --template-body file://Resources/SubnetGroup.json
   build: 
     commands:
       - echo --- Packaging Templates ---
       - mkdir Packed
-      - aws cloudformation package --template-file cf-deimos.json --s3-bucket $PACKAGE_BUCKET --s3-prefix ${PACKAGE_PREFIX}/VPC --kms-key-id $KMS_S3KEY --output-template-file Packed/cf-deimos.json      
+      - aws cloudformation package --template-file cf-cheapseats-vpc.json --s3-bucket $PACKAGE_BUCKET --s3-prefix ${PACKAGE_PREFIX}/VPC --kms-key-id $KMS_S3KEY --output-template-file Packed/cf-cheapseats-vpc.json      
       - echo --- Packaging Lambda Functions ---
       - mkdir -p Resources/Lambda
       - PKGROOT=`pwd`
@@ -34,11 +34,11 @@ phases:
 
 artifacts:
   secondary-artifacts:
-    DeimosCloudFormation:
+    VpcCloudFormation:
       base-directory: Packed/
       files:
-        - cf-deimos.json
-    DeimosResources:
+        - cf-cheapseats-vpc.json
+    VpcResources:
       base-directory: Resources
       files:
         - '**/*'
