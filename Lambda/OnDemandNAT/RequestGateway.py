@@ -16,7 +16,7 @@ def ec2_need_natgw():
     filters = [
         {'Name': 'tag:NAT-Required', 'Values' : ['True','Yes']},
         {'Name': 'instance-state-name', 'Values' : ['running']},
-        {'Name': 'vpc-id' : 'Values' : [ os.environ['VPC_ID'] ]}
+        {'Name': 'vpc-id' , 'Values' : [ os.environ['VPC_ID'] ]}
     ]
     instances = ec2.describe_instances(Filters=filters)
     
@@ -31,7 +31,7 @@ def vpc_has_natgw():
     filters = [
         {'Name': 'tag:OnDemandNAT', 'Values' : ['True','Yes']},
         {'Name': 'state', 'Values' : ['pending', 'available']},
-        {'Name': 'vpc-id' : 'Values' : [ os.environ['VPC_ID'] ]}
+        {'Name': 'vpc-id' , 'Values' : [ os.environ['VPC_ID'] ]}
     ]
     
     gateway_json = ec2.describe_nat_gateways(Filters=filters)
