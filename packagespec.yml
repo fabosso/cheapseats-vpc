@@ -2,8 +2,8 @@ version: 0.2
 
 env:
   parameter-store:
-    PACKAGE_BUCKET: "/AccountEnv/ConfigBucket"
-    PACKAGE_PREFIX: "/AccountEnv/ConfigBucket/ArtifactPrefix"
+    PACKAGE_BUCKET: "/CheapSeats/Env/ConfigBucket"
+    PACKAGE_PREFIX: "/CheapSeats/Env/ConfigBucket/ArtifactPrefix"
 
 phases:
   install:

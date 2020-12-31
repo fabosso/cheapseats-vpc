@@ -47,7 +47,7 @@
     "ArtifactPrefixParam" : {
       "Type" : "AWS::SSM::Parameter",
       "Properties" : {
-        "Name" : "/CheapSeats/Env/ArtifactPrefix",
+        "Name" : "/CheapSeats/Env/ConfigBucket/ArtifactPrefix",
         "Type" : "String",
         "Value" : { "Ref" : "ArtifactPrefix" }
       }
