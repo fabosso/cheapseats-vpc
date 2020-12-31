@@ -78,7 +78,7 @@
                 "ssm:AddTagsToResource",
                 "ssm:RemoveTagsFromResource"
               ],
-              "Resource": { "Fn::Sub" : "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:/parameter/CheapSeats/*" }
+              "Resource": { "Fn::Sub" : "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/CheapSeats/*" }
             },
             {
               "Sid": "S3DeploymentAccess",
@@ -120,7 +120,7 @@
                 "ssm:AddTagsToResource",
                 "ssm:RemoveTagsFromResource"
               ],
-              "Resource": { "Fn::Sub" : "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:/parameter/CheapSeats/*" }
+              "Resource": { "Fn::Sub" : "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/CheapSeats/*" }
             },
             {
               "Sid": "S3DeploymentAccess",
