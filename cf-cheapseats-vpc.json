@@ -8,14 +8,10 @@
       "Type" : "String",
       "Description" : "CIDR Range for AWS Resources"
     },
-    "VpnCIDRRange" : {
-      "Type" : "String",
-      "Description" : "CIDR Range for Incoming VPN Connectivity"
-    },
     "ConfigBucket" : {
        "Type" : "AWS::SSM::Parameter::Value<String>",
        "Description" : "S3 Bucket for Configuration Artifacts & Templates",
-       "Default" : "/AccountEnv/ConfigBucket"
+       "Default" : "/CheapSeats/Env/ConfigBucket"
     },
     "VPCName" : {
       "Type" : "String" ,
@@ -252,22 +248,6 @@
         "Action": "lambda:InvokeFunction",
         "Principal": "events.amazonaws.com",
         "SourceArn": { "Fn::GetAtt": ["OnDemandMonitorTrigger", "Arn"] }
-      }
-    },
-    
-    "VPNService" : {
-      "Type" : "AWS::CloudFormation::Stack",
-      "DependsOn" : "PublicSubnets",
-      "Properties" : {
-        "Parameters" : {
-          "VPCName" : { "Ref" : "VPCName" },
-          "VpnCIDRRange" : { "Ref" : "VpnCIDRRange" },
-          "VpcId" : { "Ref" : "Vpc" }
-        },
-        "TemplateURL" : { "Fn::Sub" : "https://${ConfigBucket}.s3.${AWS::Region}.amazonaws.com/Resources/DeimosVPN.json" },
-        "Tags" : [
-          { "Key" : "Application", "Value" : "VPN" }
-        ]
       }
     }
   },
