@@ -20,7 +20,7 @@ phases:
       - echo --- Validating Cloudformation Templates ---
       - aws cloudformation validate-template --template-body file://cf-deimos.json
       - echo --- Validating Cloudformation Resources ---
-      - aws cloudformation validate-template --template-body file://Resources/Templates/SubnetGroup.json
+      - aws cloudformation validate-template --template-body file://Resources/SubnetGroup.json
   build: 
     commands:
       - echo --- Packaging Templates ---
