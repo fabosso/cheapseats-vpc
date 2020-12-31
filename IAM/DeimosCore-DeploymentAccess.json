@@ -37,7 +37,10 @@
             "Sid": "FetchCFResources",
             "Effect": "Allow",
             "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::deimos-configmgmt/Resources/*"
+            "Resource": [
+              "arn:aws:s3:::deimos-configmgmt/Resources/*"
+            , "arn:aws:s3:::deimos-configmgmt/Build/*"
+            ]
         },
         {
             "Sid": "DeimosCoreIAM",
