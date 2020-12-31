@@ -53,7 +53,7 @@ def create_nat_gateway():
     
     subnet_json = ec2.describe_subnets(Filters=[
         {'Name' : 'tag:Public', 'Values' : ['Yes']},
-        {'Name' : 'vpc-id', 'Values' : [os.environ['VPC_ID']}
+        {'Name' : 'vpc-id', 'Values' : [os.environ['VPC_ID']]}
     ])
     subnet_list = jmespath.search('Subnets[*].SubnetId', subnet_json)
     subnetId = random.choice(subnet_list)
