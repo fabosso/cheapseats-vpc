@@ -18,7 +18,12 @@
     "ArtifactPrefix" : {
        "Type" : "String",
        "Description" : "Key Prefix for Deployment Artifacts",
-       "Default" : "Resources/Deployment"
+       "Default" : "Build/Artifacts"
+    },
+    "ResourcesPrefix" : {
+       "Type" : "String",
+       "Description" : "Key Prefix for Resource Files",
+       "Default" : "Resources"
     }
   },
   
@@ -53,6 +58,48 @@
       }
     },
     
+    "CodeDeployPolicy" : {
+      "Type" : "AWS::IAM::ManagedPolicy",
+      "Properties" : {
+        "ManagedPolicyName" : "CheapseatsVpcBuildPolicy",
+        "Description" : "IAM Deployment Permissions required to prepare VPC deployment artifacts via CodeBuild",
+        "Path" : "/cheapseats/vpc/",
+        "PolicyDocument" : {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "SSMParameterAccess",
+              "Effect": "Allow",
+              "Action": [
+                "ssm:GetParameter",
+                "ssm:GetParameters",
+                "ssm:PutParameter",
+                "ssm:DeleteParameter",
+                "ssm:AddTagsToResource",
+                "ssm:RemoveTagsFromResource"
+              ],
+              "Resource": { "Fn::Sub" : "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:/parameter/CheapSeats/*" }
+            },
+            {
+              "Sid": "S3DeploymentAccess",
+              "Effect": "Allow",
+              "Action": [
+                "s3:GetObject",
+                "s3:GetObjectVersion",
+                "s3:ListBucket",
+                "s3:PutObject"
+              ],
+              "Resource": [
+                { "Fn::Sub" : "arn:aws:s3:::${ConfigBucketName}" }
+              , { "Fn::Sub" : "arn:aws:s3:::${ConfigBucketName}/${ArtifactPrefix}/*" } 
+              , { "Fn::Sub" : "arn:aws:s3:::${ConfigBucketName}/${ResourcesPrefix}/*" } 
+              ]
+            }
+          ]
+        }
+      }
+    },
+    
     "CloudformationPolicy" : {
       "Type" : "AWS::IAM::ManagedPolicy",
       "Properties" : {
@@ -84,9 +131,9 @@
                 "s3:ListBucket"
               ],
               "Resource": [
-                { "Fn::Sub" : "arn:aws:s3:${AWS::Region}:${AWS::AccountId}:${ConfigBucketName}" }
-              , { "Fn::Sub" : "arn:aws:s3:${AWS::Region}:${AWS::AccountId}:${ConfigBucketName}/${ArtifactPrefix}/*" } 
-              , { "Fn::Sub" : "arn:aws:s3:${AWS::Region}:${AWS::AccountId}:${ConfigBucketName}/Build/*" } 
+                { "Fn::Sub" : "arn:aws:s3:::${ConfigBucketName}" }
+              , { "Fn::Sub" : "arn:aws:s3:::${ConfigBucketName}/${ArtifactPrefix}/*" } 
+              , { "Fn::Sub" : "arn:aws:s3:::${ConfigBucketName}/${ResourcesPrefix}/*" } 
               ]
             },
             {
