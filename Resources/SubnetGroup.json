@@ -103,7 +103,7 @@
     "CidrParameters" : {
       "Type" : "AWS::SSM::Parameter",
       "Properties" : {
-        "Name" : { "Fn::Sub" : "/Vpc/${VPCName}/Subnets/${SubnetGroupName}-CIDR" },
+        "Name" : { "Fn::Sub" : "/CheapSeats/Vpc/${VPCName}/Subnets/${SubnetGroupName}-CIDR" },
         "Type" : "String",
         "Value" : { "Ref" : "CidrRange" }
       }
@@ -112,7 +112,7 @@
     "SubnetParameters" : {
       "Type" : "AWS::SSM::Parameter",
       "Properties" : {
-        "Name" : { "Fn::Sub" : "/Vpc/${VPCName}/Subnets/${SubnetGroupName}" },
+        "Name" : { "Fn::Sub" : "/CheapSeats/Vpc/${VPCName}/Subnets/${SubnetGroupName}" },
         "Type" : "StringList",
         "Value" : { "Fn::Join" : [ ",", [ 
           { "Ref" : "SubnetA" }
