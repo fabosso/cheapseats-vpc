@@ -28,9 +28,7 @@ phases:
       - aws cloudformation package --template-file cf-cheapseats-vpc.json --s3-bucket $PACKAGE_BUCKET --s3-prefix ${PACKAGE_PREFIX}/VPC --kms-key-id $KMS_S3KEY --output-template-file Packed/cf-cheapseats-vpc.json      
 
 artifacts:
-  secondary-artifacts:
-    VpcCloudFormation:
-      base-directory: Packed/
-      files:
-        - cf-cheapseats-vpc.json
+  base-directory: Packed/
+  files:
+    - cf-cheapseats-vpc.json
     
