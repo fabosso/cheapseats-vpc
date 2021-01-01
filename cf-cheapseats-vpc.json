@@ -214,10 +214,7 @@
       "Properties" : {
        "FunctionName" : { "Fn::Sub" : "${VPCName}-CheckGatewayRequired" },
        "Description" : "Checks if an Operational NAT Gateway is still required and terminates if not",
-       "Code" : {
-         "S3Bucket" : { "Ref" : "ConfigBucket" },
-         "S3Key" : "Resources/Lambda/OnDemandNAT.zip"
-       },
+       "Code" : "./Lambda/OnDemandNAT",
        "Handler" : "RequestGateway.check_gateway_required",
        "Runtime" : "python3.6",
        "Timeout" : 300,
