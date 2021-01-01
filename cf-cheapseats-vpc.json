@@ -15,8 +15,7 @@
     },
     "VPCName" : {
       "Type" : "String" ,
-      "Description" : "Environment Name for VPC and Supporting Infrastructure",
-      "Default" : "Deimos"
+      "Description" : "Environment Name for VPC and Supporting Infrastructure"
     }
   },
   
