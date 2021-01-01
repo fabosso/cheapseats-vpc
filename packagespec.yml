@@ -26,11 +26,6 @@ phases:
       - echo --- Packaging Templates ---
       - mkdir Packed
       - aws cloudformation package --template-file cf-cheapseats-vpc.json --s3-bucket $PACKAGE_BUCKET --s3-prefix ${PACKAGE_PREFIX}/VPC --kms-key-id $KMS_S3KEY --output-template-file Packed/cf-cheapseats-vpc.json      
-      - echo --- Packaging Lambda Functions ---
-      - mkdir -p Resources/Lambda
-      - PKGROOT=`pwd`
-      - cd ${PKGROOT}/Lambda/VPNLaunchedHandler
-      - zip -r ${PKGROOT}/Resources/Lambda/VPNLaunchedHandler.zip *
 
 artifacts:
   secondary-artifacts:
@@ -38,8 +33,4 @@ artifacts:
       base-directory: Packed/
       files:
         - cf-cheapseats-vpc.json
-    VpcResources:
-      base-directory: Resources
-      files:
-        - '**/*'
     
