@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
 
-  "Description" : "Core VPC and IAM Infrastructure",
+  "Description" : "CheapSeats VPC Core Infrastructure",
   
   "Parameters" : {
     "AwsCIDRRange" : {
