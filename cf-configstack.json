@@ -10,6 +10,12 @@
       "AllowedValues" : ["Yes", "No"],
       "Default" : "Yes"
     },
+    "CreateRoles" : {
+      "Type" : "String",
+      "Description" : "Provision IAM Roles and Policies for Build Pipeline",
+      "AllowedValues" : ["Yes", "No"],
+      "Default" : "No"
+    },
     "ConfigBucketName" : {
        "Type" : "String",
        "Description" : "S3 Bucket for Configuration Artifacts & Templates",
@@ -28,7 +34,8 @@
   },
   
   "Conditions" : {
-    "ShouldCreateBucket" : { "Fn::Equals" : [ { "Ref" : "CreateBucket" }, "Yes" ] }
+    "ShouldCreateBucket" : { "Fn::Equals" : [ { "Ref" : "CreateBucket" }, "Yes" ] },
+    "ShouldCreateRoles" : { "Fn::Equals" : [ { "Ref" : "CreateRoles" }, "Yes" ] }
   },
   
   "Resources" : {
@@ -60,6 +67,7 @@
     
     "CodeDeployPolicy" : {
       "Type" : "AWS::IAM::ManagedPolicy",
+      "Condition" : "ShouldCreateRoles",
       "Properties" : {
         "ManagedPolicyName" : "CheapseatsVpcBuildPolicy",
         "Description" : "IAM Deployment Permissions required to prepare VPC deployment artifacts via CodeBuild",
@@ -102,6 +110,7 @@
     
     "CloudformationPolicy" : {
       "Type" : "AWS::IAM::ManagedPolicy",
+      "Condition" : "ShouldCreateRoles",
       "Properties" : {
         "ManagedPolicyName" : "CheapseatsVpcDeployPolicy",
         "Description" : "IAM Deployment Permissions required to provision VPC via CloudFormation",
