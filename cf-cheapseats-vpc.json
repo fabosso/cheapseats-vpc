@@ -8,11 +8,6 @@
       "Type" : "String",
       "Description" : "CIDR Range for AWS Resources"
     },
-    "ConfigBucket" : {
-       "Type" : "AWS::SSM::Parameter::Value<String>",
-       "Description" : "S3 Bucket for Configuration Artifacts & Templates",
-       "Default" : "/CheapSeats/Env/ConfigBucket"
-    },
     "VPCName" : {
       "Type" : "String" ,
       "Description" : "Environment Name for VPC and Supporting Infrastructure"
