@@ -114,7 +114,8 @@
                 "ec2:DescribeSubnets",
                 "ec2:DescribeSecurityGroups",
                 "ec2:DescribeVpcs",
-                "cloudformation:ValidateTemplate"
+                "cloudformation:ValidateTemplate",
+                "kms:DescribeKey"
               ],
               "Resource": "*"
             },
@@ -139,15 +140,6 @@
               ],              
               "Resource": [
                  { "Fn::Sub" : "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*" }
-              ]
-            },
-            {
-              "Effect" : "Allow",
-              "Action" : [ 
-                "kms:DescribeKey"
-              ],
-              "Resource" : [
-                { "Fn::Sub" : "arn:aws:kms:${AWS::Region}:${AWS::AccountId}:alias/aws/s3" }
               ]
             }
           ]
