@@ -238,6 +238,33 @@
               ],
               "Resource" : { "Fn::Sub" : "arn:aws:events:${AWS::Region}:${AWS::AccountId}:rule/*" }
             },
+            {
+              "Sid": "DeimosCoreIAM",
+              "Effect": "Allow",
+              "Action": [
+                "iam:GetRole",
+                "iam:UpdateAssumeRolePolicy",
+                "iam:PassRole",
+                "iam:GetPolicy",
+                "iam:GetRole",
+                "iam:DeleteRolePolicy",
+                "iam:DeletePolicy",
+                "iam:CreateRole",
+                "iam:DeleteRole",
+                "iam:AttachRolePolicy",
+                "iam:DetachRolePolicy",
+                "iam:UpdateRole",
+                "iam:PutRolePolicy",
+                "iam:GetRolePolicy",
+                "iam:ListRoleTags",
+                "iam:TagRole",
+                "iam:UntagRole"
+              ],
+              "Resource": [
+                 { "Fn::Sub" : "arn:aws:iam::${AWS::AccountId}:role/cheapseats/*" }
+              ,  { "Fn::Sub" : "arn:aws:iam::${AWS::AccountId}:policy/cheapseats/*" }
+              ]
+        },
           ]
         }
       }
