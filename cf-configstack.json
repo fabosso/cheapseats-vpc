@@ -65,7 +65,7 @@
       }
     },
     
-    "CodeDeployPolicy" : {
+    "CodeBuildPolicy" : {
       "Type" : "AWS::IAM::ManagedPolicy",
       "Condition" : "ShouldCreateRoles",
       "Properties" : {
@@ -102,13 +102,61 @@
               , { "Fn::Sub" : "arn:aws:s3:::${ConfigBucketName}/${ArtifactPrefix}/*" } 
               , { "Fn::Sub" : "arn:aws:s3:::${ConfigBucketName}/${ResourcesPrefix}/*" } 
               ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "ec2:CreateNetworkInterface",
+                "ec2:DescribeDhcpOptions",
+                "ec2:DescribeNetworkInterfaces",
+                "ec2:DeleteNetworkInterface",
+                "ec2:DescribeSubnets",
+                "ec2:DescribeSecurityGroups",
+                "ec2:DescribeVpcs"
+              ],
+              "Resource": "*"
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "ec2:CreateNetworkInterfacePermission"
+              ],
+              "Resource": "arn:aws:ec2:ap-southeast-2:495602461790:network-interface/*",
+              "Condition": {
+                "StringEquals": {
+                  "ec2:AuthorizedService": "codebuild.amazonaws.com"
+                }
+              }
             }
           ]
         }
       }
     },
     
-    "CloudformationPolicy" : {
+    "CodeBuildRole" : {
+      "Type" : "AWS::IAM::Role",
+      "Condition" : "ShouldCreateRoles",
+      "Properties" : {
+        "RoleName" : "CheapseatsVpcCodeBuildRole",
+        "Description" : "IAM Role for CheapSeats packaging activities via CodeBuild",
+        "AssumeRolePolicyDocument" : {
+          "Version" : "2012-10-17",
+          "Statement" : [ {
+            "Effect" : "Allow",
+            "Principal" : {
+              "Service" : [ "codebuild.amazonaws.com" ]
+            },
+            "Action" : [ "sts:AssumeRole" ]
+          } ]
+        },
+        "Path" : "/cheapseats/vpc/",
+        "ManagedPolicyArns" : [
+          { "Ref" : "CodeBuildPolicy" }
+        ]
+      }
+    },
+    
+    "CloudFormationPolicy" : {
       "Type" : "AWS::IAM::ManagedPolicy",
       "Condition" : "ShouldCreateRoles",
       "Properties" : {
@@ -179,6 +227,30 @@
           ]
         }
       }
-    }
+    },
+    
+    
+    "CloudFormationRole" : {
+      "Type" : "AWS::IAM::Role",
+      "Condition" : "ShouldCreateRoles",
+      "Properties" : {
+        "RoleName" : "CheapseatsVpcCloudFormationRole",
+        "Description" : "IAM Role for CheapSeats deployment via CloudFormation",
+        "AssumeRolePolicyDocument" : {
+          "Version" : "2012-10-17",
+          "Statement" : [ {
+            "Effect" : "Allow",
+            "Principal" : {
+              "Service" : [ "cloudformation.amazonaws.com" ]
+            },
+            "Action" : [ "sts:AssumeRole" ]
+          } ]
+        },
+        "Path" : "/cheapseats/vpc/",
+        "ManagedPolicyArns" : [
+          { "Ref" : "CloudFormationPolicy" }
+        ]
+      }
+    },
   },
 }
