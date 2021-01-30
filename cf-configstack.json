@@ -99,6 +99,7 @@
               ],
               "Resource": [
                 { "Fn::Sub" : "arn:aws:s3:::${ConfigBucketName}" }
+              , { "Fn::Sub" : "arn:aws:s3:::codepipeline-${AWS::Region}-*" }
               , { "Fn::Sub" : "arn:aws:s3:::${ConfigBucketName}/${ArtifactPrefix}/*" } 
               , { "Fn::Sub" : "arn:aws:s3:::${ConfigBucketName}/${ResourcesPrefix}/*" } 
               ]
