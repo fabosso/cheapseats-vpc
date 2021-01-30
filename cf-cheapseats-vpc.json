@@ -132,7 +132,7 @@
             "Action" : [ "sts:AssumeRole" ]
           } ]
         },
-        "Path" : "/ondemandnat/",
+        "Path" : "/cheapseats/ondemandnat/",
         "ManagedPolicyArns" : [
           "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
         ]
