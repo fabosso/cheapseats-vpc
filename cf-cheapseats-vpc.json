@@ -212,6 +212,12 @@
        "Handler" : "RequestGateway.check_gateway_required",
        "Runtime" : "python3.6",
        "Timeout" : 300,
+       "Environment" : {
+         "Variables" : { 
+           "VPC_NAME" : { "Ref" : "VPCName" },
+           "VPC_ID"   : { "Ref" : "Vpc" }
+         }
+       },
        "Role"    : { "Fn::GetAtt" : [ "OnDemandNatLambdaRole", "Arn" ] }
        }
     },
