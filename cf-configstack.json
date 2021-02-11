@@ -323,4 +323,28 @@
       }
     },
   },
+  
+  "Outputs" : {
+    "ConfigBucket" : {
+      "Description" : "Configuration S3 Bucket",
+      "Value" : { "Fn::If" : [ "ShouldCreateBucket", { "Ref" : "ConfigBucketObject" }, { "Ref" : "ConfigBucketName" } ] },
+      "Export" : {
+        "Name" : { "Fn::Sub" : "CheapSeats-ConfigBucket" }
+      }
+    },
+    "ArtifactPrefix" : {
+      "Description" : "Prefix for Configuration Artifacts",
+      "Value" : { "Ref" : "ArtifactPrefix" },
+      "Export" : {
+        "Name" : { "Fn::Sub" : "CheapSeats-ArtifactPrefix" }
+      }
+    },
+    "ResourcesPrefix" : {
+      "Description" : "Prefix for Resource Files",
+      "Value" : { "Ref" : "ResourcesPrefix" },
+      "Export" : {
+        "Name" : { "Fn::Sub" : "CheapSeats-ResourcesPrefix" }
+      }
+    }
+  }
 }
