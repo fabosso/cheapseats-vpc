@@ -246,6 +246,21 @@
         "Principal": "events.amazonaws.com",
         "SourceArn": { "Fn::GetAtt": ["OnDemandMonitorTrigger", "Arn"] }
       }
+    },
+    
+    "SSHAccessSecurityGroup" : {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "Security Group for VPN Hosts",
+        "GroupName" :  { "Fn::Sub" : "${VPCName}-SSHAccess-Open" },
+        "SecurityGroupIngress" : [ {
+          "IpProtocol" : "tcp",
+          "FromPort" : 22,
+          "ToPort" : 22,
+          "CidrIp" : "0.0.0.0/0"
+         } ],
+        "VpcId" : {"Fn::ImportValue" : {"Fn::Sub" : "${VPCName}-VPCID"}}
+      }
     }
   },
   
@@ -255,6 +270,13 @@
       "Value" : { "Ref" : "Vpc" },
       "Export" : {
         "Name" : { "Fn::Sub" : "${VPCName}-VPCID" }
+      }
+    },
+    "SshOpenSg" : {
+      "Description" : "ARN of SSH Access Security Group (Open)",
+      "Value" : { "Ref" : "SSHAccessSecurityGroup" },
+      "Export" : {
+        "Name" : { "Fn::Sub" : "${VPCName}-SSHAccess-Open-SG" }
       }
     }
   }
