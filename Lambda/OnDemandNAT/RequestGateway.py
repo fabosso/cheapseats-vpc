@@ -26,7 +26,7 @@ def ec2_need_natgw():
     else:
         print("Checking if NAT Gateway is required - NO\n")
         return False
-        
+
 def vpc_has_natgw():
     filters = [
         {'Name': 'tag:OnDemandNAT', 'Values' : ['True','Yes']},
@@ -74,17 +74,16 @@ def create_nat_gateway():
       , {'Key' : 'Environment', 'Value' : 'Infrastructure'}
       ]
     )
-    return gatewayId
+
+    # Wait for gateway to finish starting.
+    waiter = ec2.get_waiter('nat_gateway_available')
+    waiter.wait(NatGatewayIds = [gatewayId])
     
 def update_route_tables(gatewayId):
     routes_json = ec2.describe_route_tables(Filters=[{'Name' : 'tag:OnDemandNAT', 'Values' : ['Yes', 'True']}])
     routes_list = jmespath.search('RouteTables[*].RouteTableId', routes_json)
     
     print("Fetched Routes List for update ---\n%s\n---\n" % routes_list)
-    
-    # Wait for gateway to finish starting.
-    waiter = ec2.get_waiter('nat_gateway_available')
-    waiter.wait(NatGatewayIds = [gatewayId])
     
     for routeTableId in routes_list:
         print("Updating Route Table %s" % routeTableId)
@@ -149,7 +148,7 @@ def request_gateway_handler(event, context):
             'nat_needed' : 'requested'
         }
     
-        if gateway_list == None: #and nat_needed == True:
+        if gateway_list == None:
             print("New Gateway Required, Launching\n")
             gatewayId = create_nat_gateway()
             update_route_tables(gatewayId)
