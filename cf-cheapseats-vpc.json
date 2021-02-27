@@ -193,6 +193,7 @@
        "Handler" : "RequestGateway.request_gateway_handler",
        "Runtime" : "python3.6",
        "Timeout" : 300,
+       "ReservedConcurrentExecutions" : 1,
        "Environment" : {
          "Variables" : { 
            "VPC_NAME" : { "Ref" : "VPCName" },
