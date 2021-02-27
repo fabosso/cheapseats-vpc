@@ -173,6 +173,7 @@ def check_gateway_required(event, context):
     gateway_list = vpc_has_natgw()
     
     info = {}
+    gw_change_list = []
     
     if gateway_list == None:
         # Nothing to do.
@@ -192,8 +193,10 @@ def check_gateway_required(event, context):
             
         if inactive >= timedelta(minutes=45):
             ec2.delete_nat_gateway(NatGatewayId = gatewayId)
+            print("Gateway %s detected as inactive, terminated" % gatewayId)
             gw_change_list.append({'action' : 'deleted', 'gatewayId' : gatewayId, 'age' : ('%s' % age), 'inactive' : ('%s' % inactive)})
         else:
+            print("Gateway %s is still active, skipped" % gatewayId)
             gw_change_list.append({'action' : 'skipped', 'gatewayId' : gatewayId, 'age' : ('%s' % age), 'inactive' : ('%s' % inactive)})
     info['nat-changed'] = gw_change_list
         
