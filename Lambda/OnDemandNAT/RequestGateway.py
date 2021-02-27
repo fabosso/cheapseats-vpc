@@ -10,9 +10,8 @@ from botocore.exceptions import ClientError
 
 ec2 = boto3.client('ec2')
 
-def vpc_has_natgw():
+def list_nat_gateways():
     filters = [
-        {'Name': 'tag:OnDemandNAT', 'Values' : ['True','Yes']},
         {'Name': 'state', 'Values' : ['pending', 'available']},
         {'Name': 'vpc-id' , 'Values' : [ os.environ['VPC_ID'] ]}
     ]
@@ -83,7 +82,7 @@ def update_route_tables(gatewayId):
 def request_gateway_handler(event, context):
     print("NAT Gateway Requested\n")
     try:
-        gateway_list = vpc_has_natgw()
+        gateway_list = list_nat_gateways()
     
         info = {
             'nat_needed' : 'requested'
@@ -128,7 +127,7 @@ def request_gateway_handler(event, context):
         raise e
 
 def check_gateway_required(event, context):
-    gateway_list = vpc_has_natgw()
+    gateway_list = list_nat_gateways()
     
     info = {}
     gw_change_list = []
