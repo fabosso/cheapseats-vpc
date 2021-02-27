@@ -80,48 +80,6 @@ def update_route_tables(gatewayId):
         
         print("Update Completed for %s\n" % routeTableId)
     
-def autolaunch_handler(event, context):
-    
-    nat_needed = ec2_need_natgw()
-    gateway_list = vpc_has_natgw()
-    
-    info = {
-        'nat_needed' : nat_needed
-    }
-    
-    if gateway_list == None and nat_needed == True:
-        gatewayId = create_nat_gateway()
-        update_route_tables(gatewayId)
-        
-        info['nat-launched'] = gatewayId
-    elif gateway_list != None and nat_needed == True:
-        for (gatewayId, state, created, lastRequested) in gateway_list:
-            ec2.create_tags(
-              Resources=[gatewayId]
-            , Tags=[ {'Key' : 'LastRequested', 'Value' : '%s' % datetime.utcnow() } ]
-           )
-    elif gateway_list != None and nat_needed == False:
-        gw_change_list = []
-        
-        for (gatewayId, state, created, lastRequested) in  gateway_list:
-            age = datetime.now(created.tzinfo) - created
-            
-            if lastRequested != None:
-                inactive = datetime.utcnow() - parser.isoparse(lastRequested)
-            else:
-                inactive = age
-            
-            if inactive >= timedelta(minutes=45):
-                ec2.delete_nat_gateway(NatGatewayId = gatewayId)
-                gw_change_list.append({'action' : 'deleted', 'gatewayId' : gatewayId, 'age' : ('%s' % age), 'inactive' : ('%s' % inactive)})
-            else:
-                gw_change_list.append({'action' : 'skipped', 'gatewayId' : gatewayId, 'age' : ('%s' % age), 'inactive' : ('%s' % inactive)})
-        info['nat-changed'] = gw_change_list
-        
-    print("SUMMARY:\n%s\n" % json.dumps(info))
-    return info
-
-    
 def request_gateway_handler(event, context):
     print("NAT Gateway Requested\n")
     try:
