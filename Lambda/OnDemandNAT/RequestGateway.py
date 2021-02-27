@@ -61,6 +61,8 @@ def create_nat_gateway():
     waiter = ec2.get_waiter('nat_gateway_available')
     waiter.wait(NatGatewayIds = [gatewayId])
     
+    return gatewayId
+    
 def update_route_tables(gatewayId):
     routes_json = ec2.describe_route_tables(Filters=[{'Name' : 'tag:OnDemandNAT', 'Values' : ['Yes', 'True']}])
     routes_list = jmespath.search('RouteTables[*].RouteTableId', routes_json)
