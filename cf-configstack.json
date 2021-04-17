@@ -261,7 +261,9 @@
                 "lambda:RemovePermission",
                 "lambda:ListTags",
                 "lambda:TagResource",
-                "lambda:UntagResource"
+                "lambda:UntagResource",
+                "lambda:PutFunctionConcurrency",
+                "lambda:DeleteFunctionConcurrency"
               ],
               "Resource": { "Fn::Sub" : "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:*" }
             },
