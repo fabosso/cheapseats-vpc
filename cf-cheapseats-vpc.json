@@ -140,7 +140,6 @@
     },
 
     "OnDemandNatLambdaPolicy" : {
-      "DependsOn" : [ "OnDemandNatLambdaRole" ],
       "Type" : "AWS::IAM::Policy",
       "Properties" : {
         "PolicyName" : "OnDemandNat-Policy",
