@@ -272,6 +272,13 @@
         "Name" : { "Fn::Sub" : "${VPCName}-VPCID" }
       }
     },
+    "VpcCidr" : {
+      "Description" : "CIDR range for VPC",
+      "Value" : { "Ref" : "AwsCIDRRange"},
+      "Export" : {
+        "Name" : { "Fn::Sub" : "${VPCName}-VPC-CIDR" }
+      }
+    },
     "SshOpenSg" : {
       "Description" : "ARN of SSH Access Security Group (Open)",
       "Value" : { "Ref" : "SSHAccessSecurityGroup" },
