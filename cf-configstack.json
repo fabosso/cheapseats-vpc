@@ -43,6 +43,7 @@
       "Type" : "AWS::S3::Bucket",
       "Condition" : "ShouldCreateBucket",
       "DeletionPolicy" : "Retain",
+      "UpdateReplacePolicy" : "Retain",
       "Properties" : {
       }
     },
@@ -301,7 +302,7 @@
                  { "Fn::Sub" : "arn:aws:iam::${AWS::AccountId}:role/cheapseats/*" }
               ,  { "Fn::Sub" : "arn:aws:iam::${AWS::AccountId}:policy/cheapseats/*" }
               ]
-        },
+        }
           ]
         }
       }
@@ -329,7 +330,7 @@
           { "Ref" : "CloudFormationPolicy" }
         ]
       }
-    },
+    }
   },
   
   "Outputs" : {
@@ -337,21 +338,21 @@
       "Description" : "Configuration S3 Bucket",
       "Value" : { "Fn::If" : [ "ShouldCreateBucket", { "Ref" : "ConfigBucketObject" }, { "Ref" : "ConfigBucketName" } ] },
       "Export" : {
-        "Name" : { "Fn::Sub" : "CheapSeats-ConfigBucket" }
+        "Name" : "CheapSeats-ConfigBucket"
       }
     },
     "ArtifactPrefix" : {
       "Description" : "Prefix for Configuration Artifacts",
       "Value" : { "Ref" : "ArtifactPrefix" },
       "Export" : {
-        "Name" : { "Fn::Sub" : "CheapSeats-ArtifactPrefix" }
+        "Name" : "CheapSeats-ConfigBucket-ArtifactPrefix"
       }
     },
     "ResourcesPrefix" : {
       "Description" : "Prefix for Resource Files",
       "Value" : { "Ref" : "ResourcesPrefix" },
       "Export" : {
-        "Name" : { "Fn::Sub" : "CheapSeats-ResourcesPrefix" }
+        "Name" : "CheapSeats-ConfigBucket-ResourcesPrefix"
       }
     }
   }
