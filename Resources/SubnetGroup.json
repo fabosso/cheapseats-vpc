@@ -27,7 +27,14 @@
     "MaskSize" : {
       "Type" : "Number",
       "Description" : "The number of bits to assign to the subnet mask for each subnet",
-      "Default" : 8
+      "Default" : 8,
+      "MinValue" : 4,
+      "MaxValue" : 24
+    },
+    "AssignPublicIp" : {
+      "Type" : "String",
+      "Description" : "Whether to allocate a public IP Address to machines in this subnet",
+      "AllowedValues" : ["Yes", "No"]
     }
   },
 
@@ -39,6 +46,7 @@
         "VpcId" : { "Ref" : "VpcId" },
         "CidrBlock" : { "Fn::Select" : [ 0,  { "Fn::Cidr" : [ { "Ref" : "CidrRange" }, 3, { "Ref" : "MaskSize" } ] } ] },
         "AvailabilityZone" : { "Fn::Select" : [ 0 , { "Fn::GetAZs" : { "Ref" : "AWS::Region" } } ] },
+        "MapPublicIpOnLaunch" : { "Fn::Equals" : [ {"Ref" : "AssignPublicIp" }, "Yes"]},
         "Tags" : [
           { "Key" : "Name", "Value" : { "Fn::Sub" : "${VPCName}-${SubnetGroupName}-A" } },
           { "Key" : "SubnetGroup", "Value" : { "Ref" : "SubnetGroupName" } },
@@ -61,6 +69,7 @@
         "VpcId" : { "Ref" : "VpcId" },
         "CidrBlock" : { "Fn::Select" : [ 1,  { "Fn::Cidr" : [ { "Ref" : "CidrRange" }, 3, { "Ref" : "MaskSize" } ] } ] },
         "AvailabilityZone" : { "Fn::Select" : [ 1 , { "Fn::GetAZs" : { "Ref" : "AWS::Region" } } ] },
+        "MapPublicIpOnLaunch" : { "Fn::Equals" : [ {"Ref" : "AssignPublicIp" }, "Yes"]},
         "Tags" : [
           { "Key" : "Name", "Value" : { "Fn::Sub" : "${VPCName}-${SubnetGroupName}-B" } },
           { "Key" : "SubnetGroup", "Value" : { "Ref" : "SubnetGroupName" } },
@@ -83,6 +92,7 @@
         "VpcId" : { "Ref" : "VpcId" },
         "CidrBlock" : { "Fn::Select" : [ 2,  { "Fn::Cidr" : [ { "Ref" : "CidrRange" }, 3, { "Ref" : "MaskSize" } ] } ] },
         "AvailabilityZone" : { "Fn::Select" : [ 2 , { "Fn::GetAZs" : { "Ref" : "AWS::Region" } } ] },
+        "MapPublicIpOnLaunch" : { "Fn::Equals" : [ {"Ref" : "AssignPublicIp" }, "Yes"]},
         "Tags" : [
           { "Key" : "Name", "Value" : { "Fn::Sub" : "${VPCName}-${SubnetGroupName}-C" } },
           { "Key" : "SubnetGroup", "Value" : { "Ref" : "SubnetGroupName" } },

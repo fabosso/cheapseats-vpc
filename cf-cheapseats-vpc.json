@@ -58,7 +58,8 @@
           "VpcId" : { "Ref" : "Vpc" },
           "VPCName" : { "Ref" : "VPCName" },
           "MaskSize" : 8,
-          "RouteTable" : { "Ref" : "PublicRouteTable" }
+          "RouteTable" : { "Ref" : "PublicRouteTable" },
+          "AssignPublicIp" : "Yes"
         },
         "TemplateURL" : "./Resources/SubnetGroup.json",
         "Tags" : [
@@ -99,7 +100,8 @@
           "VpcId" : { "Ref" : "Vpc" },
           "VPCName" : { "Ref" : "VPCName" },
           "MaskSize" : 8,
-          "RouteTable" : { "Ref" : "PrivateRouteTable" }
+          "RouteTable" : { "Ref" : "PrivateRouteTable" },
+          "AssignPublicIp" : "No"
         },
         "TemplateURL" : "./Resources/SubnetGroup.json",
         "Tags" : [
