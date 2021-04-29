@@ -11,9 +11,18 @@
     "VPCName" : {
       "Type" : "String" ,
       "Description" : "Environment Name for VPC and Supporting Infrastructure"
+    },
+    "FlowLogging" : {
+      "Type" : "String",
+      "AllowedValues" : [ "Yes", "No" ],
+      "Description" : "Enable VPC Flow Logging"
     }
   },
   
+  "Conditions" : {
+    "EnableFlowLogs" : { "Fn::Equals" : [{ "Ref" : "FlowLogging"}, "Yes"]}
+  },
+
   "Resources" : {
     "Vpc" : {
       "Type" : "AWS::EC2::VPC",
@@ -23,6 +32,27 @@
         "Tags" : [
           { "Key" : "Name", "Value" : { "Ref" : "VPCName" } }
         ]       
+      }
+    },
+
+    "VpcFlowLog" : {
+      "Type" : "AWS::EC2::FlowLog",
+      "Condition" : "EnableFlowLogs",
+      "Properties" : {
+        "ResourceId" : { "Ref" : "Vpc" },
+        "ResourceType" : "VPC",
+        "TrafficType" : "ALL",
+        "LogDestinationType" : "s3",
+        "LogDestination" : {
+          "Fn::Sub" : [
+            "arn:aws:s3:::${LogBucket}/flowlogs/${VPCName}",
+            {
+              "LogBucket" : { "Fn::ImportValue" : "CheapSeats-LoggingBucket" },
+              "VPCName" : { "Ref" : "VPCName" }
+            }
+          ]
+
+        }
       }
     },
 
