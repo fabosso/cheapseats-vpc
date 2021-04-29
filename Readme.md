@@ -10,6 +10,16 @@ __THIS CODE IS PROVIDED AS-IS, WITH NO WARRANTY OR SUPPORT COMMITMENTS. THE USER
 * The On Demand NAT Gateway will incur costs while it is up and operational.
 * The Elastic IP used by the NAT gateway will also incur a small cost while the gateway is not operational
 * The Lambda functions to manage the NAT Gateway may incur costs if you manage to exceed the free tier for Lambda within your AWS account.
+## Configuration
+The configuration is managed via a separate Configuration Stack (cf-configstack.json). This stack is used to specify the location of the S3 buckets used for configuration and logging (and to create them, if desired). It accepts the following parameters.
+
+* **CreateBucket** Whether new buckets should be created (if no, existing buckets you specify will be used)
+* **CreateRoles** Whether the CodeBuild and CloudFormation roles & policies should be deployed.
+* **ConfigBucketName** The name of the existing configuration bucket to use (this is ignored if CreateBucket is set to 'Yes')
+* **LoggingBucketName** The name of the existing logging bucket to use (this is ignored if CreateBucket is set to 'Yes')
+* **ArtifactPrefix** The prefix to use for storing build artifacts in the Config bucket
+* **ResourcesPrefix** The prefix to use for storing resource files in the Config bucket.
+Relevant configuration details are surfaced via both SSM parameters and stack exports, for use by other stacks.
 ## Deployment
 Two methods of deployment are supported for this project.
 Firstly, it can be provisioned by using `aws cloudformation package` to upload it to an S3 bucket you control with all required components. This is the recommended approach if you do not wish to alter or customize this template to suit your own needs.
