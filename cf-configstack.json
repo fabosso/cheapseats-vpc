@@ -6,7 +6,7 @@
   "Parameters" : {
     "CreateBucket" : {
       "Type" : "String",
-      "Description" : "Create a new configuration bucket?",
+      "Description" : "Create a new S3 buckets?",
       "AllowedValues" : ["Yes", "No"],
       "Default" : "Yes"
     },
@@ -21,6 +21,11 @@
        "Description" : "S3 Bucket for Configuration Artifacts & Templates",
        "Default" : "bucket_name_here"
     },
+    "LoggingBucketName" : {
+      "Type" : "String",
+      "Description" : "S3 Bucket for Configuration Artifacts & Templates",
+      "Default" : "bucket_name_here"
+   },
     "ArtifactPrefix" : {
        "Type" : "String",
        "Description" : "Key Prefix for Deployment Artifacts",
@@ -53,7 +58,7 @@
       "Properties" : {
         "Name" : "/CheapSeats/Env/ConfigBucket",
         "Type" : "String",
-        "Value" : { "Fn::If" : [ "ShouldCreateBucket", { "Ref" : "ConfigBucketObject" }, { "Ref" : "ConfigBucketName" } ] }
+        "Value" : { "Fn::If" : [ "ShouldCreateBucket", { "Ref" : "ConfigBucketObject" }, { "Ref" : "LoggingBucketName" } ] }
       }
     },  
 
@@ -65,6 +70,25 @@
         "Value" : { "Ref" : "ArtifactPrefix" }
       }
     },
+
+    "LoggingBucketObject" : {
+      "Type" : "AWS::S3::Bucket",
+      "Condition" : "ShouldCreateBucket",
+      "DeletionPolicy" : "Retain",
+      "UpdateReplacePolicy" : "Retain",
+      "Properties" : {
+      }
+    },
+
+    "LoggingBucketParam" : {
+      "Type" : "AWS::SSM::Parameter",
+      "Properties" : {
+        "Name" : "/CheapSeats/Env/LoggingBucket",
+        "Type" : "String",
+        "Value" : { "Fn::If" : [ "ShouldCreateBucket", { "Ref" : "LoggingBucketObject" }, { "Ref" : "LoggingBucketName" } ] }
+      }
+    },  
+
     
     "CodeBuildPolicy" : {
       "Type" : "AWS::IAM::ManagedPolicy",
@@ -370,6 +394,13 @@
       "Value" : { "Ref" : "ResourcesPrefix" },
       "Export" : {
         "Name" : "CheapSeats-ResourcesPrefix"
+      }
+    },
+    "LoggingBucket" : {
+      "Description" : "Logging S3 Bucket",
+      "Value" : { "Fn::If" : [ "ShouldCreateBucket", { "Ref" : "LoggingBucketObject" }, { "Ref" : "LoggingBucketName" } ] },
+      "Export" : {
+        "Name" : "CheapSeats-LoggingBucket"
       }
     }
   }
