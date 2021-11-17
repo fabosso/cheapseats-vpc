@@ -1,182 +1,192 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
 
-  "Description" : "CheapSeats VPC Core Infrastructure",
-  
-  "Parameters" : {
-    "AwsCIDRRange" : {
-      "Type" : "String",
-      "Description" : "CIDR Range for AWS Resources"
+  "Description": "CheapSeats VPC Core Infrastructure",
+
+  "Parameters": {
+    "AwsCIDRRange": {
+      "Type": "String",
+      "Default": "172.15.0.0/16",
+      "Description": "CIDR Range for AWS Resources"
     },
-    "VPCName" : {
-      "Type" : "String" ,
-      "Description" : "Environment Name for VPC and Supporting Infrastructure"
+    "VPCName": {
+      "Type": "String",
+      "Default": "cheapseats-vpc",
+      "Description": "Environment Name for VPC and Supporting Infrastructure"
     },
-    "FlowLogging" : {
-      "Type" : "String",
-      "AllowedValues" : [ "Yes", "No" ],
-      "Description" : "Enable VPC Flow Logging"
+    "FlowLogging": {
+      "Type": "String",
+      "Default": "Yes",
+      "AllowedValues": ["Yes", "No"],
+      "Description": "Enable VPC Flow Logging"
     }
   },
-  
-  "Conditions" : {
-    "EnableFlowLogs" : { "Fn::Equals" : [{ "Ref" : "FlowLogging"}, "Yes"]}
+
+  "Conditions": {
+    "EnableFlowLogs": { "Fn::Equals": [{ "Ref": "FlowLogging" }, "Yes"] }
   },
 
-  "Resources" : {
-    "Vpc" : {
-      "Type" : "AWS::EC2::VPC",
-      "Properties" : {
-        "CidrBlock" : { "Ref" : "AwsCIDRRange" },
-        "EnableDnsSupport" : true,
-        "Tags" : [
-          { "Key" : "Name", "Value" : { "Ref" : "VPCName" } }
-        ]       
+  "Resources": {
+    "Vpc": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": { "Ref": "AwsCIDRRange" },
+        "EnableDnsSupport": true,
+        "Tags": [{ "Key": "Name", "Value": { "Ref": "VPCName" } }]
       }
     },
 
-    "VpcFlowLog" : {
-      "Type" : "AWS::EC2::FlowLog",
-      "Condition" : "EnableFlowLogs",
-      "Properties" : {
-        "ResourceId" : { "Ref" : "Vpc" },
-        "ResourceType" : "VPC",
-        "TrafficType" : "ALL",
-        "LogDestinationType" : "s3",
-        "LogDestination" : {
-          "Fn::Sub" : [
+    "VpcFlowLog": {
+      "Type": "AWS::EC2::FlowLog",
+      "Condition": "EnableFlowLogs",
+      "Properties": {
+        "ResourceId": { "Ref": "Vpc" },
+        "ResourceType": "VPC",
+        "TrafficType": "ALL",
+        "LogDestinationType": "s3",
+        "LogDestination": {
+          "Fn::Sub": [
             "arn:aws:s3:::${LogBucket}/flowlogs/${VPCName}",
             {
-              "LogBucket" : { "Fn::ImportValue" : "CheapSeats-LoggingBucket" },
-              "VPCName" : { "Ref" : "VPCName" }
+              "LogBucket": { "Fn::ImportValue": "CheapSeats-LoggingBucket" },
+              "VPCName": { "Ref": "VPCName" }
             }
           ]
-
         }
       }
     },
 
-    "InternetGateway" : {
-      "Type" : "AWS::EC2::InternetGateway"
+    "InternetGateway": {
+      "Type": "AWS::EC2::InternetGateway"
     },
 
-    "IgwAttachment" : {
-      "Type" : "AWS::EC2::VPCGatewayAttachment",
-      "Properties" : {
-        "VpcId" : { "Ref" : "Vpc" },
-        "InternetGatewayId" : { "Ref" : "InternetGateway" }
+    "IgwAttachment": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": { "Ref": "Vpc" },
+        "InternetGatewayId": { "Ref": "InternetGateway" }
       }
     },
 
-    "PublicRouteTable" : {
-      "Type" : "AWS::EC2::RouteTable",
-      "Properties" : {
-        "VpcId" : { "Ref" : "Vpc" },
-        "Tags" : [
-          { "Key" : "Name", "Value" : "PublicRouteTable" },
-          { "Key" : "VPN-Accessible", "Value" : "Yes" }
-        ]       
-      }
-    },
-
-    "PublicSubnets" : {
-      "Type" : "AWS::CloudFormation::Stack",
-      "Properties" : {
-        "Parameters" : {
-          "SubnetGroupName" : "Public",
-          "CidrRange" : { "Fn::Select" : [ 0,  { "Fn::Cidr" : [ { "Ref" : "AwsCIDRRange" }, 2, 14 ] } ] },
-          "VpcId" : { "Ref" : "Vpc" },
-          "VPCName" : { "Ref" : "VPCName" },
-          "MaskSize" : 8,
-          "RouteTable" : { "Ref" : "PublicRouteTable" },
-          "AssignPublicIp" : "Yes"
-        },
-        "TemplateURL" : "./Resources/SubnetGroup.json",
-        "Tags" : [
-          { "Key" : "Public", "Value" : "Yes" },          
-          { "Key" : "VPN-Accessible", "Value" : "Yes" }
+    "PublicRouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": { "Ref": "Vpc" },
+        "Tags": [
+          { "Key": "Name", "Value": "PublicRouteTable" },
+          { "Key": "VPN-Accessible", "Value": "Yes" }
         ]
       }
     },
 
-    "PublicSubnetInternetRoute" : {
-      "Type" : "AWS::EC2::Route",
-      "DependsOn" : "IgwAttachment",
-      "Properties" : {
-        "DestinationCidrBlock" : "0.0.0.0/0",
-        "GatewayId" : { "Ref" : "InternetGateway" },
-        "RouteTableId" : { "Ref" : "PublicRouteTable" }
-      }
-    },
-
-    "PrivateRouteTable" : {
-      "Type" : "AWS::EC2::RouteTable",
-      "Properties" : {
-        "VpcId" : { "Ref" : "Vpc" },
-        "Tags" : [
-          { "Key" : "Name", "Value" : "PrivateRouteTable" },
-          { "Key" : "OnDemandNAT", "Value" : "True" },          
-          { "Key" : "VPN-Accessible", "Value" : "Yes" }
-        ]       
-      }
-    },
-
-    "PrivateSubnets" : {
-      "Type" : "AWS::CloudFormation::Stack",
-      "Properties" : {
-        "Parameters" : {
-          "SubnetGroupName" : "Private",
-          "CidrRange" : { "Fn::Select" : [ 1,  { "Fn::Cidr" : [ { "Ref" : "AwsCIDRRange" }, 2, 14 ] } ] },
-          "VpcId" : { "Ref" : "Vpc" },
-          "VPCName" : { "Ref" : "VPCName" },
-          "MaskSize" : 8,
-          "RouteTable" : { "Ref" : "PrivateRouteTable" },
-          "AssignPublicIp" : "No"
+    "PublicSubnets": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "Parameters": {
+          "SubnetGroupName": "Public",
+          "CidrRange": {
+            "Fn::Select": [
+              0,
+              { "Fn::Cidr": [{ "Ref": "AwsCIDRRange" }, 2, 14] }
+            ]
+          },
+          "VpcId": { "Ref": "Vpc" },
+          "VPCName": { "Ref": "VPCName" },
+          "MaskSize": 8,
+          "RouteTable": { "Ref": "PublicRouteTable" },
+          "AssignPublicIp": "Yes"
         },
-        "TemplateURL" : "./Resources/SubnetGroup.json",
-        "Tags" : [
-          { "Key" : "Public", "Value" : "No" }
+        "TemplateURL": "./Resources/SubnetGroup.json",
+        "Tags": [
+          { "Key": "Public", "Value": "Yes" },
+          { "Key": "VPN-Accessible", "Value": "Yes" }
         ]
       }
     },
-    
-    "OnDemandNatElasticIP" : {
-      "Type" : "AWS::EC2::EIP",
-      "Properties" : {
-        "Domain" : "vpc",
-        "Tags" : [ 
-          { "Key" : "Name", "Value" : "OnDemandNAT-IPAddr" },
-          { "Key" : "ForVpc", "Value" : { "Ref" : "VPCName" }}
+
+    "PublicSubnetInternetRoute": {
+      "Type": "AWS::EC2::Route",
+      "DependsOn": "IgwAttachment",
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": { "Ref": "InternetGateway" },
+        "RouteTableId": { "Ref": "PublicRouteTable" }
+      }
+    },
+
+    "PrivateRouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": { "Ref": "Vpc" },
+        "Tags": [
+          { "Key": "Name", "Value": "PrivateRouteTable" },
+          { "Key": "OnDemandNAT", "Value": "True" },
+          { "Key": "VPN-Accessible", "Value": "Yes" }
         ]
       }
     },
-    
-    "OnDemandNatLambdaRole" : {
-      "Type" : "AWS::IAM::Role",
-      "Properties" : {
-        "AssumeRolePolicyDocument" : {
-          "Version" : "2012-10-17",
-          "Statement" : [ {
-            "Effect" : "Allow",
-            "Principal" : {
-              "Service" : [ "lambda.amazonaws.com" ]
-            },
-            "Action" : [ "sts:AssumeRole" ]
-          } ]
+
+    "PrivateSubnets": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "Parameters": {
+          "SubnetGroupName": "Private",
+          "CidrRange": {
+            "Fn::Select": [
+              1,
+              { "Fn::Cidr": [{ "Ref": "AwsCIDRRange" }, 2, 14] }
+            ]
+          },
+          "VpcId": { "Ref": "Vpc" },
+          "VPCName": { "Ref": "VPCName" },
+          "MaskSize": 8,
+          "RouteTable": { "Ref": "PrivateRouteTable" },
+          "AssignPublicIp": "No"
         },
-        "Path" : "/cheapseats/ondemandnat/",
-        "ManagedPolicyArns" : [
+        "TemplateURL": "./Resources/SubnetGroup.json",
+        "Tags": [{ "Key": "Public", "Value": "No" }]
+      }
+    },
+
+    "OnDemandNatElasticIP": {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "Domain": "vpc",
+        "Tags": [
+          { "Key": "Name", "Value": "OnDemandNAT-IPAddr" },
+          { "Key": "ForVpc", "Value": { "Ref": "VPCName" } }
+        ]
+      }
+    },
+
+    "OnDemandNatLambdaRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": ["lambda.amazonaws.com"]
+              },
+              "Action": ["sts:AssumeRole"]
+            }
+          ]
+        },
+        "Path": "/cheapseats/ondemandnat/",
+        "ManagedPolicyArns": [
           "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
         ]
       }
     },
 
-    "OnDemandNatLambdaPolicy" : {
-      "Type" : "AWS::IAM::Policy",
-      "Properties" : {
-        "PolicyName" : "OnDemandNat-Policy",
-        "Roles" : [ { "Ref" : "OnDemandNatLambdaRole" } ],
-        "PolicyDocument" : {
+    "OnDemandNatLambdaPolicy": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "OnDemandNat-Policy",
+        "Roles": [{ "Ref": "OnDemandNatLambdaRole" }],
+        "PolicyDocument": {
           "Version": "2012-10-17",
           "Statement": [
             {
@@ -214,63 +224,63 @@
         }
       }
     },
-    
-    "OnDemandRequestNatLambda" : {
-      "Type" : "AWS::Lambda::Function",
-      "Properties" : {
-       "FunctionName" : { "Fn::Sub" : "${VPCName}-RequestNATGateway" },
-       "Description" : "Request a NAT Gateway (Provisioning one if it isn't already available)",
-       "Code" : "./Lambda/OnDemandNAT",
-       "Handler" : "RequestGateway.request_gateway_handler",
-       "Runtime" : "python3.6",
-       "Timeout" : 300,
-       "ReservedConcurrentExecutions" : 1,
-       "Environment" : {
-         "Variables" : { 
-           "VPC_NAME" : { "Ref" : "VPCName" },
-           "VPC_ID"   : { "Ref" : "Vpc" }
-         }
-       },
-       "Role"    : { "Fn::GetAtt" : [ "OnDemandNatLambdaRole", "Arn" ] }
-       }
+
+    "OnDemandRequestNatLambda": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "FunctionName": { "Fn::Sub": "${VPCName}-RequestNATGateway" },
+        "Description": "Request a NAT Gateway (Provisioning one if it isn't already available)",
+        "Code": "./Lambda/OnDemandNAT",
+        "Handler": "RequestGateway.request_gateway_handler",
+        "Runtime": "python3.6",
+        "Timeout": 300,
+        "ReservedConcurrentExecutions": 1,
+        "Environment": {
+          "Variables": {
+            "VPC_NAME": { "Ref": "VPCName" },
+            "VPC_ID": { "Ref": "Vpc" }
+          }
+        },
+        "Role": { "Fn::GetAtt": ["OnDemandNatLambdaRole", "Arn"] }
+      }
     },
 
-    "OnDemandMonitorLambda" : {
-      "Type" : "AWS::Lambda::Function",
-      "Properties" : {
-       "FunctionName" : { "Fn::Sub" : "${VPCName}-CheckGatewayRequired" },
-       "Description" : "Checks if an Operational NAT Gateway is still required and terminates if not",
-       "Code" : "./Lambda/OnDemandNAT",
-       "Handler" : "RequestGateway.check_gateway_required",
-       "Runtime" : "python3.6",
-       "Timeout" : 300,
-       "Environment" : {
-         "Variables" : { 
-           "VPC_NAME" : { "Ref" : "VPCName" },
-           "VPC_ID"   : { "Ref" : "Vpc" }
-         }
-       },
-       "Role"    : { "Fn::GetAtt" : [ "OnDemandNatLambdaRole", "Arn" ] }
-       }
+    "OnDemandMonitorLambda": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "FunctionName": { "Fn::Sub": "${VPCName}-CheckGatewayRequired" },
+        "Description": "Checks if an Operational NAT Gateway is still required and terminates if not",
+        "Code": "./Lambda/OnDemandNAT",
+        "Handler": "RequestGateway.check_gateway_required",
+        "Runtime": "python3.6",
+        "Timeout": 300,
+        "Environment": {
+          "Variables": {
+            "VPC_NAME": { "Ref": "VPCName" },
+            "VPC_ID": { "Ref": "Vpc" }
+          }
+        },
+        "Role": { "Fn::GetAtt": ["OnDemandNatLambdaRole", "Arn"] }
+      }
     },
-    
-    "OnDemandMonitorTrigger" : {
-      "Type" : "AWS::Events::Rule",
-      "Properties" : {
-        "Name" : { "Fn::Sub" : "${VPCName}-CheckGatewayTrigger" },
-        "Description" : "Twice hourly check to determine if the NAT Gateway is still required",
-        "ScheduleExpression" : "rate(30 minutes)",
-        "State" : "ENABLED",
-        "Targets" : [
+
+    "OnDemandMonitorTrigger": {
+      "Type": "AWS::Events::Rule",
+      "Properties": {
+        "Name": { "Fn::Sub": "${VPCName}-CheckGatewayTrigger" },
+        "Description": "Twice hourly check to determine if the NAT Gateway is still required",
+        "ScheduleExpression": "rate(30 minutes)",
+        "State": "ENABLED",
+        "Targets": [
           {
             "Arn": { "Fn::GetAtt": ["OnDemandMonitorLambda", "Arn"] },
-            "Id": { "Fn::Sub" : "${VPCName}-CheckGatewayRequired" }
+            "Id": { "Fn::Sub": "${VPCName}-CheckGatewayRequired" }
           }
         ]
       }
     },
-    
-    "OnDemandMonitorPermissions" : {
+
+    "OnDemandMonitorPermissions": {
       "Type": "AWS::Lambda::Permission",
       "Properties": {
         "FunctionName": { "Ref": "OnDemandMonitorLambda" },
@@ -279,45 +289,46 @@
         "SourceArn": { "Fn::GetAtt": ["OnDemandMonitorTrigger", "Arn"] }
       }
     },
-    
-    "SSHAccessSecurityGroup" : {
-      "Type" : "AWS::EC2::SecurityGroup",
-      "Properties" : {
-        "GroupDescription" : "Security Group for VPN Hosts",
-        "GroupName" :  { "Fn::Sub" : "${VPCName}-SSHAccess-Open" },
-        "SecurityGroupIngress" : [ {
-          "IpProtocol" : "tcp",
-          "FromPort" : 22,
-          "ToPort" : 22,
-          "CidrIp" : "0.0.0.0/0"
-         } ],
-        "VpcId" : {"Fn::ImportValue" : {"Fn::Sub" : "${VPCName}-VPCID"}}
+
+    "SSHAccessSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Security Group for VPN Hosts",
+        "GroupName": { "Fn::Sub": "${VPCName}-SSHAccess-Open" },
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 22,
+            "ToPort": 22,
+            "CidrIp": "0.0.0.0/0"
+          }
+        ],
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${VPCName}-VPCID" } }
       }
     }
   },
-  
-  "Outputs" : {
-    "VpcId" : {
-      "Description" : "VPC ID of VPC",
-      "Value" : { "Ref" : "Vpc" },
-      "Export" : {
-        "Name" : { "Fn::Sub" : "${VPCName}-VPCID" }
+
+  "Outputs": {
+    "VpcId": {
+      "Description": "VPC ID of VPC",
+      "Value": { "Ref": "Vpc" },
+      "Export": {
+        "Name": { "Fn::Sub": "${VPCName}-VPCID" }
       }
     },
-    "VpcCidr" : {
-      "Description" : "CIDR range for VPC",
-      "Value" : { "Ref" : "AwsCIDRRange"},
-      "Export" : {
-        "Name" : { "Fn::Sub" : "${VPCName}-VPC-CIDR" }
+    "VpcCidr": {
+      "Description": "CIDR range for VPC",
+      "Value": { "Ref": "AwsCIDRRange" },
+      "Export": {
+        "Name": { "Fn::Sub": "${VPCName}-VPC-CIDR" }
       }
     },
-    "SshOpenSg" : {
-      "Description" : "ARN of SSH Access Security Group (Open)",
-      "Value" : { "Ref" : "SSHAccessSecurityGroup" },
-      "Export" : {
-        "Name" : { "Fn::Sub" : "${VPCName}-SSHAccess-Open-SG" }
+    "SshOpenSg": {
+      "Description": "ARN of SSH Access Security Group (Open)",
+      "Value": { "Ref": "SSHAccessSecurityGroup" },
+      "Export": {
+        "Name": { "Fn::Sub": "${VPCName}-SSHAccess-Open-SG" }
       }
     }
   }
 }
-    

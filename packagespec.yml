@@ -10,7 +10,6 @@ phases:
     runtime-versions:
       python: 3.7
     commands:
-
       # Upgrade AWS CLI to the latest version
       - pip install --upgrade awscli
   pre_build:
@@ -21,14 +20,13 @@ phases:
       - aws cloudformation validate-template --template-body file://cf-cheapseats-vpc.json
       - echo --- Validating Cloudformation Resources ---
       - aws cloudformation validate-template --template-body file://Resources/SubnetGroup.json
-  build: 
+  build:
     commands:
       - echo --- Packaging Templates ---
       - mkdir Packed
-      - aws cloudformation package --template-file cf-cheapseats-vpc.json --s3-bucket $PACKAGE_BUCKET --s3-prefix ${PACKAGE_PREFIX}/VPC --kms-key-id $KMS_S3KEY --output-template-file Packed/cf-cheapseats-vpc.json      
+      - aws cloudformation package --template-file cf-cheapseats-vpc.json --s3-bucket $PACKAGE_BUCKET --s3-prefix ${PACKAGE_PREFIX}/VPC --kms-key-id $KMS_S3KEY --output-template-file Packed/cf-cheapseats-vpc.json
 
 artifacts:
   base-directory: Packed/
   files:
     - cf-cheapseats-vpc.json
-    
