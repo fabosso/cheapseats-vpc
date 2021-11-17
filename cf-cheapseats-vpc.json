@@ -304,13 +304,6 @@
       "Export": {
         "Name": { "Fn::Sub": "${VPCName}-VPC-CIDR" }
       }
-    },
-    "SshOpenSg": {
-      "Description": "ARN of SSH Access Security Group (Open)",
-      "Value": { "Ref": "SSHAccessSecurityGroup" },
-      "Export": {
-        "Name": { "Fn::Sub": "${VPCName}-SSHAccess-Open-SG" }
-      }
     }
   }
 }
