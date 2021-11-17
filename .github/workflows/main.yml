@@ -1,0 +1,32 @@
+version: 0.2
+
+env:
+  parameter-store:
+    PACKAGE_BUCKET: "/CheapSeats/Env/ConfigBucket"
+    PACKAGE_PREFIX: "/CheapSeats/Env/ConfigBucket/ArtifactPrefix"
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.7
+    commands:
+      # Upgrade AWS CLI to the latest version
+      - pip install --upgrade awscli
+  pre_build:
+    commands:
+      - echo --- Fetching AWS Key Information --
+      - export KMS_S3KEY=`aws kms describe-key --key-id alias/aws/s3 --query 'KeyMetadata.KeyId' | tr -d \"`
+      - echo --- Validating Cloudformation Templates ---
+      - aws cloudformation validate-template --template-body file://cf-cheapseats-vpc.json
+      - echo --- Validating Cloudformation Resources ---
+      - aws cloudformation validate-template --template-body file://Resources/SubnetGroup.json
+  build:
+    commands:
+      - echo --- Packaging Templates ---
+      - mkdir Packed
+      - aws cloudformation package --template-file cf-cheapseats-vpc.json --s3-bucket $PACKAGE_BUCKET --s3-prefix ${PACKAGE_PREFIX}/VPC --kms-key-id $KMS_S3KEY --output-template-file Packed/cf-cheapseats-vpc.json
+
+artifacts:
+  base-directory: Packed/
+  files:
+    - cf-cheapseats-vpc.json
