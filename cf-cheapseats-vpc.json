@@ -234,7 +234,6 @@
         "Handler": "RequestGateway.request_gateway_handler",
         "Runtime": "python3.6",
         "Timeout": 300,
-        "ReservedConcurrentExecutions": 1,
         "Environment": {
           "Variables": {
             "VPC_NAME": { "Ref": "VPCName" },
@@ -287,23 +286,6 @@
         "Action": "lambda:InvokeFunction",
         "Principal": "events.amazonaws.com",
         "SourceArn": { "Fn::GetAtt": ["OnDemandMonitorTrigger", "Arn"] }
-      }
-    },
-
-    "SSHAccessSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Properties": {
-        "GroupDescription": "Security Group for VPN Hosts",
-        "GroupName": { "Fn::Sub": "${VPCName}-SSHAccess-Open" },
-        "SecurityGroupIngress": [
-          {
-            "IpProtocol": "tcp",
-            "FromPort": 22,
-            "ToPort": 22,
-            "CidrIp": "0.0.0.0/0"
-          }
-        ],
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${VPCName}-VPCID" } }
       }
     }
   },

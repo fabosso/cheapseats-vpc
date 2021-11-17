@@ -1,103 +1,112 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
 
-  "Description" : "Cheapseats Core Configuration and Supporting Infrastructure",
-  
-  "Parameters" : {
-    "CreateBucket" : {
-      "Type" : "String",
-      "Description" : "Create a new S3 buckets?",
-      "AllowedValues" : ["Yes", "No"],
-      "Default" : "Yes"
+  "Description": "Cheapseats Core Configuration and Supporting Infrastructure",
+
+  "Parameters": {
+    "CreateBucket": {
+      "Type": "String",
+      "Description": "Create a new S3 buckets?",
+      "AllowedValues": ["Yes", "No"],
+      "Default": "Yes"
     },
-    "CreateRoles" : {
-      "Type" : "String",
-      "Description" : "Provision IAM Roles and Policies for Build Pipeline",
-      "AllowedValues" : ["Yes", "No"],
-      "Default" : "No"
+    "CreateRoles": {
+      "Type": "String",
+      "Description": "Provision IAM Roles and Policies for Build Pipeline",
+      "AllowedValues": ["Yes", "No"],
+      "Default": "No"
     },
-    "ConfigBucketName" : {
-       "Type" : "String",
-       "Description" : "S3 Bucket for Configuration Artifacts & Templates",
-       "Default" : "bucket_name_here"
+    "ConfigBucketName": {
+      "Type": "String",
+      "Description": "S3 Bucket for Configuration Artifacts & Templates",
+      "Default": "bucket_name_here"
     },
-    "LoggingBucketName" : {
-      "Type" : "String",
-      "Description" : "S3 Bucket for Configuration Artifacts & Templates",
-      "Default" : "bucket_name_here"
-   },
-    "ArtifactPrefix" : {
-       "Type" : "String",
-       "Description" : "Key Prefix for Deployment Artifacts",
-       "Default" : "Build/Artifacts"
+    "LoggingBucketName": {
+      "Type": "String",
+      "Description": "S3 Bucket for Configuration Artifacts & Templates",
+      "Default": "bucket_name_here"
     },
-    "ResourcesPrefix" : {
-       "Type" : "String",
-       "Description" : "Key Prefix for Resource Files",
-       "Default" : "Resources"
+    "ArtifactPrefix": {
+      "Type": "String",
+      "Description": "Key Prefix for Deployment Artifacts",
+      "Default": "Build/Artifacts"
+    },
+    "ResourcesPrefix": {
+      "Type": "String",
+      "Description": "Key Prefix for Resource Files",
+      "Default": "Resources"
     }
   },
-  
-  "Conditions" : {
-    "ShouldCreateBucket" : { "Fn::Equals" : [ { "Ref" : "CreateBucket" }, "Yes" ] },
-    "ShouldCreateRoles" : { "Fn::Equals" : [ { "Ref" : "CreateRoles" }, "Yes" ] }
+
+  "Conditions": {
+    "ShouldCreateBucket": { "Fn::Equals": [{ "Ref": "CreateBucket" }, "Yes"] },
+    "ShouldCreateRoles": { "Fn::Equals": [{ "Ref": "CreateRoles" }, "Yes"] }
   },
-  
-  "Resources" : {
-    "ConfigBucketObject" : {
-      "Type" : "AWS::S3::Bucket",
-      "Condition" : "ShouldCreateBucket",
-      "DeletionPolicy" : "Retain",
-      "UpdateReplacePolicy" : "Retain",
-      "Properties" : {
-      }
-    },
-  
-    "ConfigBucketParam" : {
-      "Type" : "AWS::SSM::Parameter",
-      "Properties" : {
-        "Name" : "/CheapSeats/Env/ConfigBucket",
-        "Type" : "String",
-        "Value" : { "Fn::If" : [ "ShouldCreateBucket", { "Ref" : "ConfigBucketObject" }, { "Ref" : "LoggingBucketName" } ] }
-      }
-    },  
 
-    "ArtifactPrefixParam" : {
-      "Type" : "AWS::SSM::Parameter",
-      "Properties" : {
-        "Name" : "/CheapSeats/Env/ConfigBucket/ArtifactPrefix",
-        "Type" : "String",
-        "Value" : { "Ref" : "ArtifactPrefix" }
+  "Resources": {
+    "ConfigBucketObject": {
+      "Type": "AWS::S3::Bucket",
+      "Condition": "ShouldCreateBucket",
+      "DeletionPolicy": "Retain",
+      "UpdateReplacePolicy": "Retain",
+      "Properties": {}
+    },
+
+    "ConfigBucketParam": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/CheapSeats/Env/ConfigBucket",
+        "Type": "String",
+        "Value": {
+          "Fn::If": [
+            "ShouldCreateBucket",
+            { "Ref": "ConfigBucketObject" },
+            { "Ref": "LoggingBucketName" }
+          ]
+        }
       }
     },
 
-    "LoggingBucketObject" : {
-      "Type" : "AWS::S3::Bucket",
-      "Condition" : "ShouldCreateBucket",
-      "DeletionPolicy" : "Retain",
-      "UpdateReplacePolicy" : "Retain",
-      "Properties" : {
+    "ArtifactPrefixParam": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/CheapSeats/Env/ConfigBucket/ArtifactPrefix",
+        "Type": "String",
+        "Value": { "Ref": "ArtifactPrefix" }
       }
     },
 
-    "LoggingBucketParam" : {
-      "Type" : "AWS::SSM::Parameter",
-      "Properties" : {
-        "Name" : "/CheapSeats/Env/LoggingBucket",
-        "Type" : "String",
-        "Value" : { "Fn::If" : [ "ShouldCreateBucket", { "Ref" : "LoggingBucketObject" }, { "Ref" : "LoggingBucketName" } ] }
-      }
-    },  
+    "LoggingBucketObject": {
+      "Type": "AWS::S3::Bucket",
+      "Condition": "ShouldCreateBucket",
+      "DeletionPolicy": "Retain",
+      "UpdateReplacePolicy": "Retain",
+      "Properties": {}
+    },
 
-    
-    "CodeBuildPolicy" : {
-      "Type" : "AWS::IAM::ManagedPolicy",
-      "Condition" : "ShouldCreateRoles",
-      "Properties" : {
-        "ManagedPolicyName" : "CheapseatsVpcBuildPolicy",
-        "Description" : "IAM Deployment Permissions required to prepare VPC deployment artifacts via CodeBuild",
-        "Path" : "/cheapseats/vpc/",
-        "PolicyDocument" : {
+    "LoggingBucketParam": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/CheapSeats/Env/LoggingBucket",
+        "Type": "String",
+        "Value": {
+          "Fn::If": [
+            "ShouldCreateBucket",
+            { "Ref": "LoggingBucketObject" },
+            { "Ref": "LoggingBucketName" }
+          ]
+        }
+      }
+    },
+
+    "CodeBuildPolicy": {
+      "Type": "AWS::IAM::ManagedPolicy",
+      "Condition": "ShouldCreateRoles",
+      "Properties": {
+        "ManagedPolicyName": "CheapseatsVpcBuildPolicy",
+        "Description": "IAM Deployment Permissions required to prepare VPC deployment artifacts via CodeBuild",
+        "Path": "/cheapseats/vpc/",
+        "PolicyDocument": {
           "Version": "2012-10-17",
           "Statement": [
             {
@@ -111,7 +120,9 @@
                 "ssm:AddTagsToResource",
                 "ssm:RemoveTagsFromResource"
               ],
-              "Resource": { "Fn::Sub" : "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/CheapSeats/*" }
+              "Resource": {
+                "Fn::Sub": "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/CheapSeats/*"
+              }
             },
             {
               "Sid": "S3DeploymentAccess",
@@ -123,10 +134,14 @@
                 "s3:PutObject"
               ],
               "Resource": [
-                { "Fn::Sub" : "arn:aws:s3:::${ConfigBucketName}" }
-              , { "Fn::Sub" : "arn:aws:s3:::codepipeline-${AWS::Region}-*" }
-              , { "Fn::Sub" : "arn:aws:s3:::${ConfigBucketName}/${ArtifactPrefix}/*" } 
-              , { "Fn::Sub" : "arn:aws:s3:::${ConfigBucketName}/${ResourcesPrefix}/*" } 
+                { "Fn::Sub": "arn:aws:s3:::${ConfigBucketName}" },
+                { "Fn::Sub": "arn:aws:s3:::codepipeline-${AWS::Region}-*" },
+                {
+                  "Fn::Sub": "arn:aws:s3:::${ConfigBucketName}/${ArtifactPrefix}/*"
+                },
+                {
+                  "Fn::Sub": "arn:aws:s3:::${ConfigBucketName}/${ResourcesPrefix}/*"
+                }
               ]
             },
             {
@@ -146,9 +161,7 @@
             },
             {
               "Effect": "Allow",
-              "Action": [
-                "ec2:CreateNetworkInterfacePermission"
-              ],
+              "Action": ["ec2:CreateNetworkInterfacePermission"],
               "Resource": "arn:aws:ec2:ap-southeast-2:495602461790:network-interface/*",
               "Condition": {
                 "StringEquals": {
@@ -157,52 +170,54 @@
               }
             },
             {
-              "Effect" : "Allow",
+              "Effect": "Allow",
               "Action": [
                 "logs:CreateLogGroup",
                 "logs:CreateLogStream",
                 "logs:PutLogEvents"
-              ],              
+              ],
               "Resource": [
-                 { "Fn::Sub" : "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*" }
+                {
+                  "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
+                }
               ]
             }
           ]
         }
       }
     },
-    
-    "CodeBuildRole" : {
-      "Type" : "AWS::IAM::Role",
-      "Condition" : "ShouldCreateRoles",
-      "Properties" : {
-        "RoleName" : "CheapseatsVpcCodeBuildRole",
-        "Description" : "IAM Role for CheapSeats packaging activities via CodeBuild",
-        "AssumeRolePolicyDocument" : {
-          "Version" : "2012-10-17",
-          "Statement" : [ {
-            "Effect" : "Allow",
-            "Principal" : {
-              "Service" : [ "codebuild.amazonaws.com" ]
-            },
-            "Action" : [ "sts:AssumeRole" ]
-          } ]
+
+    "CodeBuildRole": {
+      "Type": "AWS::IAM::Role",
+      "Condition": "ShouldCreateRoles",
+      "Properties": {
+        "RoleName": "CheapseatsVpcCodeBuildRole",
+        "Description": "IAM Role for CheapSeats packaging activities via CodeBuild",
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": ["codebuild.amazonaws.com"]
+              },
+              "Action": ["sts:AssumeRole"]
+            }
+          ]
         },
-        "Path" : "/cheapseats/vpc/",
-        "ManagedPolicyArns" : [
-          { "Ref" : "CodeBuildPolicy" }
-        ]
+        "Path": "/cheapseats/vpc/",
+        "ManagedPolicyArns": [{ "Ref": "CodeBuildPolicy" }]
       }
     },
-    
-    "CloudFormationPolicy" : {
-      "Type" : "AWS::IAM::ManagedPolicy",
-      "Condition" : "ShouldCreateRoles",
-      "Properties" : {
-        "ManagedPolicyName" : "CheapseatsVpcDeployPolicy",
-        "Description" : "IAM Deployment Permissions required to provision VPC via CloudFormation",
-        "Path" : "/cheapseats/vpc/",
-        "PolicyDocument" : {
+
+    "CloudFormationPolicy": {
+      "Type": "AWS::IAM::ManagedPolicy",
+      "Condition": "ShouldCreateRoles",
+      "Properties": {
+        "ManagedPolicyName": "CheapseatsVpcDeployPolicy",
+        "Description": "IAM Deployment Permissions required to provision VPC via CloudFormation",
+        "Path": "/cheapseats/vpc/",
+        "PolicyDocument": {
           "Version": "2012-10-17",
           "Statement": [
             {
@@ -254,7 +269,9 @@
                 "ssm:AddTagsToResource",
                 "ssm:RemoveTagsFromResource"
               ],
-              "Resource": { "Fn::Sub" : "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/CheapSeats/*" }
+              "Resource": {
+                "Fn::Sub": "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/CheapSeats/*"
+              }
             },
             {
               "Sid": "S3DeploymentAccess",
@@ -265,9 +282,13 @@
                 "s3:ListBucket"
               ],
               "Resource": [
-                { "Fn::Sub" : "arn:aws:s3:::${ConfigBucketName}" }
-              , { "Fn::Sub" : "arn:aws:s3:::${ConfigBucketName}/${ArtifactPrefix}/*" } 
-              , { "Fn::Sub" : "arn:aws:s3:::${ConfigBucketName}/${ResourcesPrefix}/*" } 
+                { "Fn::Sub": "arn:aws:s3:::${ConfigBucketName}" },
+                {
+                  "Fn::Sub": "arn:aws:s3:::${ConfigBucketName}/${ArtifactPrefix}/*"
+                },
+                {
+                  "Fn::Sub": "arn:aws:s3:::${ConfigBucketName}/${ResourcesPrefix}/*"
+                }
               ]
             },
             {
@@ -290,18 +311,22 @@
                 "lambda:PutFunctionConcurrency",
                 "lambda:DeleteFunctionConcurrency"
               ],
-              "Resource": { "Fn::Sub" : "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:*" }
+              "Resource": {
+                "Fn::Sub": "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:*"
+              }
             },
             {
               "Sid": "EventCreation",
               "Effect": "Allow",
-              "Action" : [
+              "Action": [
                 "events:*Rule",
                 "events:*Targets",
                 "events:Tag*",
                 "events:Untag*"
               ],
-              "Resource" : { "Fn::Sub" : "arn:aws:events:${AWS::Region}:${AWS::AccountId}:rule/*" }
+              "Resource": {
+                "Fn::Sub": "arn:aws:events:${AWS::Region}:${AWS::AccountId}:rule/*"
+              }
             },
             {
               "Sid": "DeimosCoreIAM",
@@ -326,81 +351,96 @@
                 "iam:UntagRole"
               ],
               "Resource": [
-                 { "Fn::Sub" : "arn:aws:iam::${AWS::AccountId}:role/cheapseats/*" }
-              ,  { "Fn::Sub" : "arn:aws:iam::${AWS::AccountId}:policy/cheapseats/*" }
+                {
+                  "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/cheapseats/*"
+                },
+                {
+                  "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:policy/cheapseats/*"
+                }
               ]
-        }
+            }
           ]
         }
       }
     },
-    
-    
-    "CloudFormationRole" : {
-      "Type" : "AWS::IAM::Role",
-      "Condition" : "ShouldCreateRoles",
-      "Properties" : {
-        "RoleName" : "CheapseatsVpcCloudFormationRole",
-        "Description" : "IAM Role for CheapSeats deployment via CloudFormation",
-        "AssumeRolePolicyDocument" : {
-          "Version" : "2012-10-17",
-          "Statement" : [ {
-            "Effect" : "Allow",
-            "Principal" : {
-              "Service" : [ "cloudformation.amazonaws.com" ]
-            },
-            "Action" : [ "sts:AssumeRole" ]
-          } ]
+
+    "CloudFormationRole": {
+      "Type": "AWS::IAM::Role",
+      "Condition": "ShouldCreateRoles",
+      "Properties": {
+        "RoleName": "CheapseatsVpcCloudFormationRole",
+        "Description": "IAM Role for CheapSeats deployment via CloudFormation",
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": ["cloudformation.amazonaws.com"]
+              },
+              "Action": ["sts:AssumeRole"]
+            }
+          ]
         },
-        "Path" : "/cheapseats/vpc/",
-        "ManagedPolicyArns" : [
-          { "Ref" : "CloudFormationPolicy" }
-        ]
+        "Path": "/cheapseats/vpc/",
+        "ManagedPolicyArns": [{ "Ref": "CloudFormationPolicy" }]
       }
     }
   },
-  
-  "Outputs" : {
-    "ConfigBucket" : {
-      "Description" : "Configuration S3 Bucket",
-      "Value" : { "Fn::If" : [ "ShouldCreateBucket", { "Ref" : "ConfigBucketObject" }, { "Ref" : "ConfigBucketName" } ] },
-      "Export" : {
-        "Name" : "CheapSeats-ConfigBucket"
+
+  "Outputs": {
+    "ConfigBucket": {
+      "Description": "Configuration S3 Bucket",
+      "Value": {
+        "Fn::If": [
+          "ShouldCreateBucket",
+          { "Ref": "ConfigBucketObject" },
+          { "Ref": "ConfigBucketName" }
+        ]
+      },
+      "Export": {
+        "Name": "CheapSeats-ConfigBucket"
       }
     },
-    "ArtifactPrefix" : {
-      "Description" : "Prefix for Configuration Artifacts",
-      "Value" : { "Ref" : "ArtifactPrefix" },
-      "Export" : {
-        "Name" : "CheapSeats-ConfigBucket-ArtifactPrefix"
+    "ArtifactPrefix": {
+      "Description": "Prefix for Configuration Artifacts",
+      "Value": { "Ref": "ArtifactPrefix" },
+      "Export": {
+        "Name": "CheapSeats-ConfigBucket-ArtifactPrefix"
       }
     },
-    "ResourcesPrefix" : {
-      "Description" : "Prefix for Resource Files",
-      "Value" : { "Ref" : "ResourcesPrefix" },
-      "Export" : {
-        "Name" : "CheapSeats-ConfigBucket-ResourcesPrefix"
+    "ResourcesPrefix": {
+      "Description": "Prefix for Resource Files",
+      "Value": { "Ref": "ResourcesPrefix" },
+      "Export": {
+        "Name": "CheapSeats-ConfigBucket-ResourcesPrefix"
       }
     },
-    "ArtifactPrefixLegacy" : {
-      "Description" : "Prefix for Configuration Artifacts",
-      "Value" : { "Ref" : "ArtifactPrefix" },
-      "Export" : {
-        "Name" : "CheapSeats-ArtifactPrefix"
+    "ArtifactPrefixLegacy": {
+      "Description": "Prefix for Configuration Artifacts",
+      "Value": { "Ref": "ArtifactPrefix" },
+      "Export": {
+        "Name": "CheapSeats-ArtifactPrefix"
       }
     },
-    "ResourcesPrefixLegacy" : {
-      "Description" : "Prefix for Resource Files",
-      "Value" : { "Ref" : "ResourcesPrefix" },
-      "Export" : {
-        "Name" : "CheapSeats-ResourcesPrefix"
+    "ResourcesPrefixLegacy": {
+      "Description": "Prefix for Resource Files",
+      "Value": { "Ref": "ResourcesPrefix" },
+      "Export": {
+        "Name": "CheapSeats-ResourcesPrefix"
       }
     },
-    "LoggingBucket" : {
-      "Description" : "Logging S3 Bucket",
-      "Value" : { "Fn::If" : [ "ShouldCreateBucket", { "Ref" : "LoggingBucketObject" }, { "Ref" : "LoggingBucketName" } ] },
-      "Export" : {
-        "Name" : "CheapSeats-LoggingBucket"
+    "LoggingBucket": {
+      "Description": "Logging S3 Bucket",
+      "Value": {
+        "Fn::If": [
+          "ShouldCreateBucket",
+          { "Ref": "LoggingBucketObject" },
+          { "Ref": "LoggingBucketName" }
+        ]
+      },
+      "Export": {
+        "Name": "CheapSeats-LoggingBucket"
       }
     }
   }
